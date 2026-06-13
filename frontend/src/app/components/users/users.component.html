@@ -55,7 +55,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (user of users(); track user.id) {
+          @for (user of pagedUsers(); track user.id) {
             <tr>
               <td [attr.data-label]="'Users' | t">
                 <b>{{ user.name }}</b><br>
@@ -90,6 +90,11 @@
           }
         </tbody>
       </table>
+      <app-pagination
+        [meta]="pageMeta()"
+        itemLabel="Users"
+        (pageChange)="page.set($event)"
+      />
     </article>
   </div>
 </section>

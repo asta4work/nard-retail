@@ -28,9 +28,11 @@ kbd { min-width: 28px; padding: .2rem .4rem; border: 1px solid #cdd8d1; border-b
 .section-head { margin-bottom: 1.25rem; }
 .section-head h2 { margin: 0; }
 .metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
-.metric { position: relative; overflow: hidden; min-height: 150px; padding: 1.4rem; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
-.metric::after { content: ""; position: absolute; width: 85px; height: 85px; right: -30px; bottom: -30px; border-radius: 50%; background: #dcebe2; }
+.metric { position: relative; isolation: isolate; overflow: hidden; min-height: 150px; padding: 1.4rem; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.metric::after { content: ""; position: absolute; z-index: 0; width: 85px; height: 85px; inset-inline-end: -30px; bottom: -30px; border-radius: 50%; background: #dcebe2; }
+.metric > * { position: relative; z-index: 1; overflow-wrap: anywhere; }
 .metric.accent::after { background: var(--accent); }
 .metric.warning::after { background: #f9d691; }
 .metric span, .metric small { display: block; color: var(--muted); }
-.metric strong { display: block; margin: .5rem 0 .25rem; font-size: clamp(1.6rem, 2.5vw, 2.3rem); letter-spacing: -.06em; }
+.metric strong { display: block; margin: .5rem 0 .25rem; font-size: clamp(1.35rem, 2.5vw, 2.3rem); letter-spacing: -.06em; }
+[dir="rtl"] .metric strong { font-size: clamp(1.2rem, 2.1vw, 2rem); line-height: 1.25; }

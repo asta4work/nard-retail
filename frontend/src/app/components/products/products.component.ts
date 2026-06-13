@@ -41,7 +41,7 @@ export class ProductsComponent {
     sort: 'newest',
     order: 'DESC',
     page: 1,
-    limit: 20,
+    limit: 10,
   };
   readonly filters = this.fb.nonNullable.group(this.filterDefaults);
 

@@ -34,5 +34,5 @@ export class SalesQueryDto {
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) minAmount?: number;
   @IsOptional() @Type(() => Number) @IsNumber() @Min(0) maxAmount?: number;
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) page = 1;
-  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 20;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 10;
 }
