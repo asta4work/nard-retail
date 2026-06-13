@@ -1,47 +1,47 @@
 <section class="page narrow">
-  <a class="back" routerLink="/products">&larr; Back to products</a>
+  <a class="back" routerLink="/products">&larr; {{ 'Back to products' | t }}</a>
 
   <form class="panel form-card" [formGroup]="form" (ngSubmit)="save()">
     <div>
-      <p class="eyebrow">Catalog management</p>
-      <h1>{{ id ? 'Edit product' : 'Add product' }}</h1>
+      <p class="eyebrow">{{ 'Catalog management' | t }}</p>
+      <h1>{{ (id ? 'Edit product' : 'Add product') | t }}</h1>
     </div>
 
     <div class="form-grid">
       <label class="full">
-        Product name
-        <input formControlName="name" placeholder="e.g. Ceramic coffee dripper">
+        {{ 'Product name' | t }}
+        <input formControlName="name" [placeholder]="'Example product name' | t">
         @if (form.controls.name.touched && form.controls.name.invalid) {
-          <small class="error">Name is required.</small>
+          <small class="error">{{ 'Name is required.' | t }}</small>
         }
       </label>
       <label>
-        Category
-        <input formControlName="category" placeholder="e.g. Kitchen">
+        {{ 'Category' | t }}
+        <input formControlName="category" [placeholder]="'Example category' | t">
       </label>
       <label>
-        Price
+        {{ 'Price' | t }}
         <input type="number" min="0.01" step="0.01" formControlName="price">
       </label>
       <label>
-        Stock quantity
+        {{ 'Stock quantity' | t }}
         <input type="number" min="0" step="1" formControlName="stockQuantity">
       </label>
       <label class="full">
-        Product icon
+        {{ 'Product icon' | t }}
         <div class="icon-picker">
           @for (option of iconOptions; track option.value) {
             <label [class.selected]="form.controls.icon.value === option.value">
               <input type="radio" formControlName="icon" [value]="option.value">
               <svg [lucideIcon]="option.value" aria-hidden="true"></svg>
-              <span>{{ option.label }}</span>
+              <span>{{ option.label | t }}</span>
             </label>
           }
         </div>
       </label>
       <label class="full">
-        Description
-        <textarea rows="5" formControlName="description" placeholder="Product details"></textarea>
+        {{ 'Description' | t }}
+        <textarea rows="5" formControlName="description" [placeholder]="'Product details' | t"></textarea>
       </label>
     </div>
 
@@ -51,9 +51,9 @@
 
     <div class="actions">
       <button class="button primary" [disabled]="form.invalid || loading">
-        {{ loading ? 'Saving...' : 'Save product' }}
+        {{ (loading ? 'Saving...' : 'Save product') | t }}
       </button>
-      <a class="button ghost" routerLink="/products">Cancel</a>
+      <a class="button ghost" routerLink="/products">{{ 'Cancel' | t }}</a>
     </div>
   </form>
 </section>

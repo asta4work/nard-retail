@@ -1,6 +1,6 @@
 @if (auth.user$ | async; as user) {
   <header class="topbar">
-    <button class="menu-toggle" type="button" aria-label="Open navigation" [attr.aria-expanded]="navOpen" (click)="navOpen = !navOpen">
+    <button class="menu-toggle" type="button" [attr.aria-label]="'Open navigation' | t" [attr.aria-expanded]="navOpen" (click)="navOpen = !navOpen">
       <span>
       </span>
       <span>
@@ -11,28 +11,32 @@
     <a class="brand" routerLink="/dashboard">Retail<span>Ops</span>
     </a>
     <div class="topbar-actions">
-      <a class="button primary small quick-sale" routerLink="/cart">New sale</a>
+      <button class="topbar-tool" type="button" [attr.aria-label]="'Language' | t" (click)="i18n.toggle()">
+        <svg lucideIcon="languages" aria-hidden="true"></svg>
+        <span>{{ i18n.language() === 'en' ? 'العربية' : 'English' }}</span>
+      </button>
+      <a class="button primary small quick-sale" routerLink="/cart">{{ 'New sale' | t }}</a>
       <span class="user-avatar" aria-hidden="true">{{ user.name.charAt(0) }}</span>
       <span class="user-summary">
         <b>{{ user.name }}</b>
-        <small>{{ user.role }}</small>
+        <small>{{ (user.role === 'admin' ? 'Admin' : 'Employee') | t }}</small>
       </span>
-      <button class="button ghost small sign-out" (click)="logout()">Sign out</button>
+      <button class="button ghost small sign-out" (click)="logout()">{{ 'Sign out' | t }}</button>
     </div>
   </header>
   <aside class="sidebar" [class.open]="navOpen">
     <div class="sidebar-intro">
-      <span>Workspace</span>
-      <strong>Store operations</strong>
+      <span>{{ 'Workspace' | t }}</span>
+      <strong>{{ 'Store operations' | t }}</strong>
     </div>
-    <nav aria-label="Main navigation">
+    <nav [attr.aria-label]="'Main navigation' | t">
       @for (item of navItems; track item.path) {
         @if (!item.admin || auth.isAdmin) {
           <a [routerLink]="item.path" routerLinkActive="active" (click)="navOpen = false">
             <span class="nav-mark"><svg [lucideIcon]="item.icon" aria-hidden="true"></svg></span>
             <span>
-              <b>{{ item.label }}</b>
-              <small>{{ item.description }}</small>
+              <b>{{ item.label | t }}</b>
+              <small>{{ item.description | t }}</small>
             </span>
             @if (item.path === '/cart' && (cart.count$ | async); as count) {
               <em>{{ count }}</em>
@@ -41,16 +45,30 @@
         }
       }
     </nav>
+    <div class="sidebar-tools">
+      <button type="button" (click)="hotkeys.toggle()">
+        <span class="nav-mark"><svg lucideIcon="keyboard" aria-hidden="true"></svg></span>
+        <span><b>{{ 'Keyboard shortcuts' | t }}</b><small>?</small></span>
+      </button>
+      <button type="button" (click)="i18n.toggle()">
+        <span class="nav-mark"><svg lucideIcon="languages" aria-hidden="true"></svg></span>
+        <span><b>{{ 'Language' | t }}</b><small>{{ i18n.language() === 'en' ? 'العربية' : 'English' }}</small></span>
+      </button>
+    </div>
     <div class="sidebar-foot">
-      <span>Signed in as</span>
+      <span>{{ 'Signed in as' | t }}</span>
       <strong>{{ user.name }}</strong>
-      <small>{{ user.role }}</small>
+      <small>{{ (user.role === 'admin' ? 'Admin' : 'Employee') | t }}</small>
     </div>
   </aside>
   @if (navOpen) {
-    <button class="nav-backdrop" aria-label="Close navigation" (click)="navOpen = false">
+    <button class="nav-backdrop" [attr.aria-label]="'Close navigation' | t" (click)="navOpen = false">
     </button>
   }
+}
+<app-hotkeys-dialog />
+@if (hotkeys.notice()) {
+  <div class="hotkey-notice">{{ hotkeys.notice() }}</div>
 }
 <main [class.authenticated]="auth.authenticated">
   <router-outlet />

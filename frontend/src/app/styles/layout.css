@@ -14,6 +14,14 @@
 .back { display: inline-block; margin-bottom: 1.25rem; font-weight: 600; }
 
 .panel { border: 1px solid rgba(210, 222, 215, .9); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+.dialog-backdrop { position: fixed; z-index: 80; inset: 0; border: 0; background: rgba(5, 20, 14, .62); backdrop-filter: blur(4px); }
+.shortcut-dialog { position: fixed; z-index: 85; top: 50%; left: 50%; width: min(620px, calc(100% - 2rem)); max-height: calc(100vh - 2rem); overflow: auto; padding: 1.5rem; transform: translate(-50%, -50%); }
+.shortcut-dialog header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.shortcut-dialog header p:last-child { color: var(--muted); }
+.shortcut-group { margin-top: 1.25rem; }
+.shortcut-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 0; border-bottom: 1px solid var(--line); }
+.key-group { display: flex; gap: .3rem; }
+kbd { min-width: 28px; padding: .2rem .4rem; border: 1px solid #cdd8d1; border-bottom-width: 3px; border-radius: 6px; color: #30453a; background: #f5f8f6; font: 700 .7rem/1.4 "DM Sans", sans-serif; text-align: center; }
 .grid { display: grid; gap: 1.25rem; margin-top: 1.25rem; }
 .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .grid > .panel { padding: 1.5rem; }

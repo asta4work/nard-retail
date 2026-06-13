@@ -11,7 +11,9 @@ A full-stack inventory and sales operations system for retail employees and mana
 - Searchable, paginated sales history
 - Admin sales and inventory reports with trend and category views
 - Real-time stock synchronization through a NestJS Socket.IO gateway
-- Responsive Angular UI with lazy routes, OnPush components, and RxJS state
+- Responsive bilingual Angular UI with English/Arabic localization and full RTL support
+- Global keyboard shortcuts for navigation, product search, quick add, and checkout
+- Reusable print-optimized invoice documents
 - MySQL constraints, foreign keys, and catalog/reporting indexes
 
 ## Architecture
@@ -68,6 +70,16 @@ npm run build
 npm test
 npm run init-db
 ```
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|---|---|
+| `Alt+1` through `Alt+6` | Open dashboard, products, checkout, sales, reports, or users |
+| `Alt+F` | Open products and focus search |
+| `Alt+A` | Add the first available product to the cart |
+| `Ctrl+Enter` | Complete the current sale from checkout |
+| `?` | Show all keyboard shortcuts |
 
 `npm run init-db` safely merges premade users, products, and demo sales into the configured
 database. Existing users and products are left unchanged, and demo sales are inserted only

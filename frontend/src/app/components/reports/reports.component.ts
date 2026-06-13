@@ -1,12 +1,14 @@
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { getErrorMessage } from '@app/utils/http.utils';
 import { InventoryReport, SalesReport } from '@app/models';
 import { ReportsService } from '@app/services/reports.service';
+import { LocalizedCurrencyPipe } from '@app/pipes/localized-currency.pipe';
+import { LocalizedNumberPipe } from '@app/pipes/localized-number.pipe';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
 
 @Component({
   standalone: true,
-  imports: [CurrencyPipe, DecimalPipe],
+  imports: [LocalizedCurrencyPipe, LocalizedNumberPipe, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './reports.component.html',
 })

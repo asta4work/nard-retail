@@ -1,13 +1,13 @@
 <section class="page">
   <div class="hero">
     <div>
-      <p class="eyebrow">Operations overview</p>
-      <h1>Good day, {{ auth.user?.name }}</h1>
-      <p>Live inventory and recent transaction activity.</p>
+      <p class="eyebrow">{{ 'Operations overview' | t }}</p>
+      <h1>{{ 'Good day' | t }}, {{ auth.user?.name }}</h1>
+      <p>{{ 'Live inventory and recent transaction activity.' | t }}</p>
     </div>
     <div class="actions">
-      <a class="button primary" routerLink="/cart">New sale</a>
-      <a class="button ghost hero-ghost" routerLink="/products">View products</a>
+      <a class="button primary" routerLink="/cart">{{ 'New sale' | t }}</a>
+      <a class="button ghost hero-ghost" routerLink="/products">{{ 'View products' | t }}</a>
     </div>
   </div>
   @if (error()) {
@@ -15,31 +15,31 @@
   }
   <div class="metrics">
     <article class="metric">
-      <span>Products</span>
+      <span>{{ 'Products' | t }}</span>
       <strong>{{ products()?.meta?.total ?? '-' }}</strong>
-      <small>active catalog items</small>
+      <small>{{ 'active catalog items' | t }}</small>
     </article>
     <article class="metric warning">
-      <span>Low stock</span>
+      <span>{{ 'Low stock' | t }}</span>
       <strong>{{ lowStock()?.meta?.total ?? '-' }}</strong>
-      <small>10 units or fewer</small>
+      <small>{{ '10 units or fewer' | t }}</small>
     </article>
     <article class="metric">
-      <span>Recent sales</span>
+      <span>{{ 'Recent sales' | t }}</span>
       <strong>{{ sales()?.meta?.total ?? '-' }}</strong>
-      <small>recorded transactions</small>
+      <small>{{ 'recorded transactions' | t }}</small>
     </article>
     <article class="metric accent">
-      <span>Latest batch</span>
-      <strong>{{ recentTotal() | currency }}</strong>
-      <small>last five transactions</small>
+      <span>{{ 'Latest batch' | t }}</span>
+      <strong>{{ recentTotal() | money }}</strong>
+      <small>{{ 'last five transactions' | t }}</small>
     </article>
   </div>
   <div class="grid two">
     <article class="panel">
       <div class="section-head">
-        <h2>Low stock attention</h2>
-        <a routerLink="/products">View catalog</a>
+        <h2>{{ 'Low stock attention' | t }}</h2>
+        <a routerLink="/products">{{ 'View catalog' | t }}</a>
       </div>
       <div class="list">
         @for (product of lowStock()?.data ?? []; track product.id) {
@@ -48,31 +48,31 @@
               <b>{{ product.name }}</b>
               <small>{{ product.category }}</small>
             </span>
-            <em [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} left</em>
+            <em [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} {{ 'left' | t }}</em>
           </a>
         }
         @empty {
-          <p class="empty">No products need attention.</p>
+          <p class="empty">{{ 'No products need attention.' | t }}</p>
         }
       </div>
     </article>
     <article class="panel">
       <div class="section-head">
-        <h2>Recent sales</h2>
-        <a routerLink="/sales">Sales history</a>
+        <h2>{{ 'Recent sales' | t }}</h2>
+        <a routerLink="/sales">{{ 'Sales history' | t }}</a>
       </div>
       <div class="list">
         @for (sale of sales()?.data ?? []; track sale.id) {
           <div class="list-row">
             <span>
-              <b>Invoice #{{ sale.id }}</b>
-              <small>{{ sale.createdAt | date:'medium' }}</small>
+              <b>{{ 'Invoice' | t }} #{{ sale.id }}</b>
+              <small>{{ sale.createdAt | appDate:'medium' }}</small>
             </span>
-            <em>{{ sale.totalAmount | currency }}</em>
+            <em>{{ sale.totalAmount | money }}</em>
           </div>
         }
         @empty {
-          <p class="empty">No sales recorded yet.</p>
+          <p class="empty">{{ 'No sales recorded yet.' | t }}</p>
         }
       </div>
     </article>

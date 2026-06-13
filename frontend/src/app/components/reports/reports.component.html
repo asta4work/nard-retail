@@ -1,9 +1,9 @@
 <section class="page">
   <div class="page-head">
     <div>
-      <p class="eyebrow">Business intelligence</p>
-      <h1>Reports</h1>
-      <p>Sales performance and inventory health at a glance.</p>
+      <p class="eyebrow">{{ 'Business intelligence' | t }}</p>
+      <h1>{{ 'Reports' | t }}</h1>
+      <p>{{ 'Sales performance and inventory health at a glance.' | t }}</p>
     </div>
   </div>
 
@@ -15,30 +15,30 @@
     @if (inventory(); as inventory) {
     <div class="metrics">
       <article class="metric accent">
-        <span>Total sales</span>
-        <strong>{{ sales.summary.totalSales | currency }}</strong>
-        <small>{{ sales.summary.transactionCount }} transactions</small>
+        <span>{{ 'Total sales' | t }}</span>
+        <strong>{{ sales.summary.totalSales | money }}</strong>
+        <small>{{ sales.summary.transactionCount }} {{ 'transactions' | t }}</small>
       </article>
       <article class="metric">
-        <span>Today</span>
-        <strong>{{ sales.summary.todaySales | currency }}</strong>
-        <small>sales today</small>
+        <span>{{ 'Today' | t }}</span>
+        <strong>{{ sales.summary.todaySales | money }}</strong>
+        <small>{{ 'sales today' | t }}</small>
       </article>
       <article class="metric">
-        <span>This month</span>
-        <strong>{{ sales.summary.monthSales | currency }}</strong>
-        <small>month to date</small>
+        <span>{{ 'This month' | t }}</span>
+        <strong>{{ sales.summary.monthSales | money }}</strong>
+        <small>{{ 'month to date' | t }}</small>
       </article>
       <article class="metric warning">
-        <span>Stock value</span>
-        <strong>{{ inventory.summary.totalStockValue | currency }}</strong>
-        <small>{{ inventory.summary.unitsInStock | number }} units on hand</small>
+        <span>{{ 'Stock value' | t }}</span>
+        <strong>{{ inventory.summary.totalStockValue | money }}</strong>
+        <small>{{ inventory.summary.unitsInStock | appNumber }} {{ 'units on hand' | t }}</small>
       </article>
     </div>
 
     <div class="grid two">
       <article class="panel">
-        <div class="section-head"><h2>30-day sales trend</h2></div>
+        <div class="section-head"><h2>{{ '30-day sales trend' | t }}</h2></div>
         <div class="bar-chart">
           @for (day of sales.daily; track day.date) {
             <div class="bar-col" [title]="day.date + ': $' + day.total">
@@ -46,60 +46,60 @@
               <small>{{ day.date.slice(5) }}</small>
             </div>
           } @empty {
-            <p class="empty">No sales data yet.</p>
+            <p class="empty">{{ 'No sales data yet.' | t }}</p>
           }
         </div>
       </article>
 
       <article class="panel">
-        <div class="section-head"><h2>Inventory health</h2></div>
+        <div class="section-head"><h2>{{ 'Inventory health' | t }}</h2></div>
         <div class="health-grid">
-          <div><strong>{{ inventory.summary.productCount }}</strong><span>products</span></div>
-          <div><strong>{{ inventory.summary.lowStockCount }}</strong><span>low stock</span></div>
-          <div><strong>{{ inventory.summary.outOfStockCount }}</strong><span>out of stock</span></div>
+          <div><strong>{{ inventory.summary.productCount }}</strong><span>{{ 'products' | t }}</span></div>
+          <div><strong>{{ inventory.summary.lowStockCount }}</strong><span>{{ 'Low stock' | t }}</span></div>
+          <div><strong>{{ inventory.summary.outOfStockCount }}</strong><span>{{ 'Out of stock' | t }}</span></div>
         </div>
-        <h3>Needs attention</h3>
+        <h3>{{ 'Needs attention' | t }}</h3>
         <div class="list">
           @for (product of inventory.lowStock.slice(0, 6); track product.id) {
             <div class="list-row">
               <span><b>{{ product.name }}</b><small>{{ product.category }}</small></span>
-              <em [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} left</em>
+              <em [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} {{ 'left' | t }}</em>
             </div>
           }
         </div>
       </article>
 
       <article class="panel">
-        <div class="section-head"><h2>Best sellers</h2></div>
+        <div class="section-head"><h2>{{ 'Best sellers' | t }}</h2></div>
         <div class="rank-list">
           @for (product of sales.bestSelling; track product.id; let rank = $index) {
             <div>
               <span class="rank">{{ rank + 1 }}</span>
-              <span><b>{{ product.name }}</b><small>{{ product.quantitySold }} units</small></span>
-              <em>{{ product.revenue | currency }}</em>
+              <span><b>{{ product.name }}</b><small>{{ product.quantitySold }} {{ 'units' | t }}</small></span>
+              <em>{{ product.revenue | money }}</em>
             </div>
           } @empty {
-            <p class="empty">No sales data yet.</p>
+            <p class="empty">{{ 'No sales data yet.' | t }}</p>
           }
         </div>
       </article>
 
       <article class="panel">
-        <div class="section-head"><h2>Category performance</h2></div>
+        <div class="section-head"><h2>{{ 'Category performance' | t }}</h2></div>
         <div class="rank-list">
           @for (category of sales.categoryPerformance; track category.category) {
             <div>
-              <span><b>{{ category.category }}</b><small>{{ category.quantitySold }} units sold</small></span>
-              <em>{{ category.revenue | currency }}</em>
+              <span><b>{{ category.category }}</b><small>{{ category.quantitySold }} {{ 'units sold' | t }}</small></span>
+              <em>{{ category.revenue | money }}</em>
             </div>
           } @empty {
-            <p class="empty">No category data yet.</p>
+            <p class="empty">{{ 'No sales data yet.' | t }}</p>
           }
         </div>
       </article>
     </div>
     }
   } @else if (!error()) {
-    <div class="panel empty">Loading reports...</div>
+    <div class="panel empty">{{ 'Loading reports...' | t }}</div>
   }
 </section>

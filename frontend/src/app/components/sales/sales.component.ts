@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe, DatePipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -6,13 +6,17 @@ import { BehaviorSubject, debounceTime, startWith, switchMap } from 'rxjs';
 import { PaginationComponent } from '@app/components/pagination/pagination.component';
 import { emptyPage, Page, Sale } from '@app/models';
 import { SalesService } from '@app/services/sales.service';
-import { printPage } from '@app/utils/browser.utils';
 import { totalQuantity } from '@app/utils/calculations';
 import { handlePageRequest } from '@app/utils/request.utils';
+import { InvoiceComponent } from '@app/components/invoice/invoice.component';
+import { LocalizedCurrencyPipe } from '@app/pipes/localized-currency.pipe';
+import { LocalizedDatePipe } from '@app/pipes/localized-date.pipe';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
+import { LucideDynamicIcon } from '@lucide/angular';
 
 @Component({
   standalone: true,
-  imports: [AsyncPipe, CurrencyPipe, DatePipe, PaginationComponent, ReactiveFormsModule],
+  imports: [AsyncPipe, InvoiceComponent, LocalizedCurrencyPipe, LocalizedDatePipe, LucideDynamicIcon, PaginationComponent, ReactiveFormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './sales.component.html',
 })
@@ -23,7 +27,7 @@ export class SalesComponent {
   selected?: Sale;
   loading = false;
   error = '';
-  readonly print = printPage;
+  advancedOpen = false;
   readonly filterDefaults = {
     search: '',
     from: '',
@@ -57,5 +61,10 @@ export class SalesComponent {
 
   toggleDetails(sale: Sale) {
     this.selected = this.selected?.id === sale.id ? undefined : sale;
+  }
+
+  get activeFilterCount() {
+    const filters = this.filters.getRawValue();
+    return [filters.search, filters.from, filters.to, filters.minAmount, filters.maxAmount].filter(Boolean).length;
   }
 }

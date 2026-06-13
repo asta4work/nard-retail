@@ -21,6 +21,9 @@
 * { box-sizing: border-box; }
 html { min-height: 100%; background: var(--canvas); }
 body { min-width: 320px; margin: 0; color: var(--ink); background: radial-gradient(circle at 90% 0, #e8f1d2 0, transparent 24rem), var(--canvas); font: 14px/1.5 "DM Sans", sans-serif; }
+[dir="rtl"] body { font-family: "DM Sans", Tahoma, Arial, sans-serif; }
+[dir="rtl"] h1, [dir="rtl"] h2, [dir="rtl"] h3, [dir="rtl"] .brand, [dir="rtl"] .metric strong { letter-spacing: 0; }
+[dir="rtl"] input, [dir="rtl"] select, [dir="rtl"] textarea { text-align: right; }
 button, input, select, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: var(--primary); text-decoration: none; }

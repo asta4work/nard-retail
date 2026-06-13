@@ -1,4 +1,3 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { combineLatest } from 'rxjs';
@@ -8,10 +7,13 @@ import { getErrorMessage } from '@app/utils/http.utils';
 import { Page, Product, Sale } from '@app/models';
 import { ProductsService } from '@app/services/products.service';
 import { SalesService } from '@app/services/sales.service';
+import { LocalizedCurrencyPipe } from '@app/pipes/localized-currency.pipe';
+import { LocalizedDatePipe } from '@app/pipes/localized-date.pipe';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
 
 @Component({
   standalone: true,
-  imports: [CurrencyPipe, DatePipe, RouterLink],
+  imports: [LocalizedCurrencyPipe, LocalizedDatePipe, RouterLink, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './dashboard.component.html',
 })
