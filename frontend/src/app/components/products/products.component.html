@@ -1,0 +1,125 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Catalog</p>
+      <h1>Products</h1>
+      <p>Find products, monitor availability, and keep inventory accurate.</p>
+    </div>
+
+    @if (auth.isAdmin) {
+      <a class="button primary" routerLink="/products/new">Add product</a>
+    }
+  </div>
+
+  <form class="filters panel" [formGroup]="filters">
+    <label class="search">
+      Search
+      <input formControlName="search" placeholder="Name or description">
+    </label>
+
+    <label>
+      Category
+      <select formControlName="category">
+        <option value="">All categories</option>
+        @for (category of categories; track category) {
+          <option [value]="category">{{ category }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Availability
+      <select formControlName="availability">
+        <option value="all">All stock</option>
+        <option value="in-stock">In stock</option>
+        <option value="low-stock">Low stock</option>
+        <option value="out-of-stock">Out of stock</option>
+      </select>
+    </label>
+
+    <label>
+      Min price
+      <input type="number" min="0" formControlName="minPrice" placeholder="0">
+    </label>
+
+    <label>
+      Max price
+      <input type="number" min="0" formControlName="maxPrice" placeholder="Any">
+    </label>
+
+    <label>
+      Sort
+      <select formControlName="sort">
+        <option value="newest">Newest</option>
+        <option value="name">Name</option>
+        <option value="price">Price</option>
+        <option value="stock">Stock</option>
+      </select>
+    </label>
+
+    <button class="button ghost small filter-clear" type="button" (click)="filters.reset(filterDefaults)">
+      Clear filters
+    </button>
+  </form>
+
+  @if (error) {
+    <div class="notice error">{{ error }}</div>
+  }
+
+  @if (page$ | async; as page) {
+    <div class="result-summary">
+      <b>{{ page.meta.total }} products</b>
+      <span>Live stock updates are applied automatically.</span>
+    </div>
+
+    <div class="product-grid" [class.loading]="loading" aria-live="polite">
+      @for (product of page.data; track product.id) {
+        <article class="product-card">
+          <div class="product-top">
+            <span class="tag">{{ product.category }}</span>
+            <span
+              class="stock"
+              [class.danger]="product.stockQuantity === 0"
+              [class.warning]="product.stockQuantity > 0 && product.stockQuantity <= 10"
+            >
+              {{ product.stockQuantity }} in stock
+            </span>
+          </div>
+
+          <span class="product-icon" aria-hidden="true">
+            <svg [lucideIcon]="product.icon || 'package'"></svg>
+          </span>
+          <a [routerLink]="['/products', product.id]">
+            <h3>{{ product.name }}</h3>
+          </a>
+          <p>{{ product.description || 'No description provided.' }}</p>
+          <strong>{{ product.price | currency }}</strong>
+
+          <div class="actions">
+            <button class="button primary small" [disabled]="product.stockQuantity === 0" (click)="cart.add(product)">
+              Add to cart
+            </button>
+            <a class="button ghost small" [routerLink]="['/products', product.id]">View</a>
+
+            @if (auth.isAdmin) {
+              <a class="button ghost small" [routerLink]="['/products', product.id, 'edit']">Edit</a>
+              <button class="button danger small" type="button" (click)="remove(product)">Delete</button>
+            }
+          </div>
+        </article>
+      } @empty {
+        <div class="panel empty span-all">
+          <h2>No matching products</h2>
+          <p>Try removing one or more filters.</p>
+          <button class="button ghost" type="button" (click)="filters.reset(filterDefaults)">Clear filters</button>
+        </div>
+      }
+    </div>
+
+    <app-pagination
+      [meta]="page.meta"
+      itemLabel="products"
+      (pageChange)="filters.patchValue({ page: $event })"
+    />
+  }
+</section>

@@ -1,0 +1,104 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Transaction ledger</p>
+      <h1>Sales history</h1>
+      <p>Find invoices, inspect line items, and reprint receipts.</p>
+    </div>
+  </div>
+
+  <form class="filters sales-filters panel" [formGroup]="filters">
+    <label class="search">
+      Search
+      <input formControlName="search" placeholder="Invoice, customer, or product">
+    </label>
+    <label>
+      From
+      <input type="date" formControlName="from">
+    </label>
+    <label>
+      To
+      <input type="date" formControlName="to">
+    </label>
+    <label>
+      Min amount
+      <input type="number" min="0" formControlName="minAmount" placeholder="0">
+    </label>
+    <label>
+      Max amount
+      <input type="number" min="0" formControlName="maxAmount" placeholder="Any">
+    </label>
+    <button class="button ghost small filter-clear" type="button" (click)="filters.reset(filterDefaults)">
+      Clear filters
+    </button>
+  </form>
+
+  @if (error) {
+    <p class="notice error">{{ error }}</p>
+  }
+
+  @if (page$ | async; as page) {
+    <div class="result-summary">
+      <b>{{ page.meta.total }} transactions</b>
+      <span>Select details to inspect an invoice.</span>
+    </div>
+
+    <article class="panel table-panel" [class.loading]="loading">
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Customer</th>
+            <th>Processed by</th>
+            <th>Date</th>
+            <th>Items</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (sale of page.data; track sale.id) {
+            <tr>
+              <td data-label="Invoice"><b>#{{ sale.id }}</b></td>
+              <td data-label="Customer">{{ sale.customerName || 'Walk-in' }}</td>
+              <td data-label="Processed by">{{ sale.createdBy.name }}</td>
+              <td data-label="Date">{{ sale.createdAt | date:'medium' }}</td>
+              <td data-label="Items">{{ itemCount(sale) }}</td>
+              <td data-label="Total"><b>{{ sale.totalAmount | currency }}</b></td>
+              <td>
+                <button class="button ghost small" (click)="toggleDetails(sale)">
+                  {{ selected?.id === sale.id ? 'Close' : 'Details' }}
+                </button>
+              </td>
+            </tr>
+
+            @if (selected?.id === sale.id) {
+              <tr class="details-row">
+                <td colspan="7">
+                  <div class="invoice-lines">
+                    @for (item of sale.items; track item.id) {
+                      <span>{{ item.quantity }} x {{ item.product.name }}</span>
+                      <b>{{ item.lineTotal | currency }}</b>
+                    }
+                  </div>
+                  <div class="invoice-total">Invoice total <b>{{ sale.totalAmount | currency }}</b></div>
+                  <button class="button ghost small" (click)="print()">Print invoice</button>
+                </td>
+              </tr>
+            }
+          } @empty {
+            <tr>
+              <td colspan="7" class="empty">No transactions match these filters.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+
+    <app-pagination
+      [meta]="page.meta"
+      itemLabel="transactions"
+      (pageChange)="filters.patchValue({ page: $event })"
+    />
+  }
+</section>

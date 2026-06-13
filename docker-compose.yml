@@ -1,0 +1,55 @@
+services:
+  mysql:
+    image: mysql:8.4
+    profiles: [local-db]
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-retail_ops}
+      MYSQL_USER: ${MYSQL_USER:-retail}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-retail_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change_root_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-change_root_password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks: [retail]
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      DB_HOST: ${DB_HOST:-mysql}
+      DB_PORT: ${DB_PORT:-3306}
+      DB_NAME: ${MYSQL_DATABASE:-retail_ops}
+      DB_USER: ${MYSQL_USER:-retail}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-retail_password}
+      DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}
+      JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
+      ADMIN_NAME: ${ADMIN_NAME:-System Admin}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@retail.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
+      CORS_ORIGIN: http://localhost:8080
+    networks: [retail]
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    depends_on: [backend]
+    networks: [retail]
+
+volumes:
+  mysql_data:
+
+networks:
+  retail:

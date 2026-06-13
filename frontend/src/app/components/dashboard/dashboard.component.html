@@ -1,0 +1,80 @@
+<section class="page">
+  <div class="hero">
+    <div>
+      <p class="eyebrow">Operations overview</p>
+      <h1>Good day, {{ auth.user?.name }}</h1>
+      <p>Live inventory and recent transaction activity.</p>
+    </div>
+    <div class="actions">
+      <a class="button primary" routerLink="/cart">New sale</a>
+      <a class="button ghost hero-ghost" routerLink="/products">View products</a>
+    </div>
+  </div>
+  @if (error()) {
+    <div class="notice error">{{ error() }}</div>
+  }
+  <div class="metrics">
+    <article class="metric">
+      <span>Products</span>
+      <strong>{{ products()?.meta?.total ?? '-' }}</strong>
+      <small>active catalog items</small>
+    </article>
+    <article class="metric warning">
+      <span>Low stock</span>
+      <strong>{{ lowStock()?.meta?.total ?? '-' }}</strong>
+      <small>10 units or fewer</small>
+    </article>
+    <article class="metric">
+      <span>Recent sales</span>
+      <strong>{{ sales()?.meta?.total ?? '-' }}</strong>
+      <small>recorded transactions</small>
+    </article>
+    <article class="metric accent">
+      <span>Latest batch</span>
+      <strong>{{ recentTotal() | currency }}</strong>
+      <small>last five transactions</small>
+    </article>
+  </div>
+  <div class="grid two">
+    <article class="panel">
+      <div class="section-head">
+        <h2>Low stock attention</h2>
+        <a routerLink="/products">View catalog</a>
+      </div>
+      <div class="list">
+        @for (product of lowStock()?.data ?? []; track product.id) {
+          <a class="list-row" [routerLink]="['/products', product.id]">
+            <span>
+              <b>{{ product.name }}</b>
+              <small>{{ product.category }}</small>
+            </span>
+            <em [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} left</em>
+          </a>
+        }
+        @empty {
+          <p class="empty">No products need attention.</p>
+        }
+      </div>
+    </article>
+    <article class="panel">
+      <div class="section-head">
+        <h2>Recent sales</h2>
+        <a routerLink="/sales">Sales history</a>
+      </div>
+      <div class="list">
+        @for (sale of sales()?.data ?? []; track sale.id) {
+          <div class="list-row">
+            <span>
+              <b>Invoice #{{ sale.id }}</b>
+              <small>{{ sale.createdAt | date:'medium' }}</small>
+            </span>
+            <em>{{ sale.totalAmount | currency }}</em>
+          </div>
+        }
+        @empty {
+          <p class="empty">No sales recorded yet.</p>
+        }
+      </div>
+    </article>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+@if (auth.user$ | async; as user) {
+  <header class="topbar">
+    <button class="menu-toggle" type="button" aria-label="Open navigation" [attr.aria-expanded]="navOpen" (click)="navOpen = !navOpen">
+      <span>
+      </span>
+      <span>
+      </span>
+      <span>
+      </span>
+    </button>
+    <a class="brand" routerLink="/dashboard">Retail<span>Ops</span>
+    </a>
+    <div class="topbar-actions">
+      <a class="button primary small quick-sale" routerLink="/cart">New sale</a>
+      <span class="user-avatar" aria-hidden="true">{{ user.name.charAt(0) }}</span>
+      <span class="user-summary">
+        <b>{{ user.name }}</b>
+        <small>{{ user.role }}</small>
+      </span>
+      <button class="button ghost small sign-out" (click)="logout()">Sign out</button>
+    </div>
+  </header>
+  <aside class="sidebar" [class.open]="navOpen">
+    <div class="sidebar-intro">
+      <span>Workspace</span>
+      <strong>Store operations</strong>
+    </div>
+    <nav aria-label="Main navigation">
+      @for (item of navItems; track item.path) {
+        @if (!item.admin || auth.isAdmin) {
+          <a [routerLink]="item.path" routerLinkActive="active" (click)="navOpen = false">
+            <span class="nav-mark"><svg [lucideIcon]="item.icon" aria-hidden="true"></svg></span>
+            <span>
+              <b>{{ item.label }}</b>
+              <small>{{ item.description }}</small>
+            </span>
+            @if (item.path === '/cart' && (cart.count$ | async); as count) {
+              <em>{{ count }}</em>
+            }
+          </a>
+        }
+      }
+    </nav>
+    <div class="sidebar-foot">
+      <span>Signed in as</span>
+      <strong>{{ user.name }}</strong>
+      <small>{{ user.role }}</small>
+    </div>
+  </aside>
+  @if (navOpen) {
+    <button class="nav-backdrop" aria-label="Close navigation" (click)="navOpen = false">
+    </button>
+  }
+}
+<main [class.authenticated]="auth.authenticated">
+  <router-outlet />
+</main>

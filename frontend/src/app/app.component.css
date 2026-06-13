@@ -1,0 +1,25 @@
+main.authenticated { min-height: 100vh; margin-left: var(--sidebar); padding-top: var(--topbar); }
+
+.topbar { position: fixed; z-index: 30; inset: 0 0 auto; height: var(--topbar); display: flex; align-items: center; gap: 1rem; padding: 0 2rem; color: white; background: rgba(15, 37, 29, .97); backdrop-filter: blur(12px); box-shadow: 0 8px 30px rgba(10, 35, 25, .12); }
+.brand { color: white; font-size: 1.35rem; font-weight: 800; letter-spacing: -.05em; }
+.brand span { color: var(--accent); }
+.topbar-actions { display: flex; align-items: center; gap: .7rem; margin-left: auto; }
+.user-avatar { display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: var(--ink); background: var(--accent); font-weight: 800; text-transform: uppercase; }
+.user-summary { display: grid; line-height: 1.2; }
+.user-summary small { color: #aebfb6; text-transform: capitalize; }
+.menu-toggle { display: none; width: 40px; height: 40px; padding: 9px; border: 1px solid #496158; border-radius: 9px; color: white; background: transparent; cursor: pointer; }
+.menu-toggle span { display: block; height: 2px; margin: 4px 0; border-radius: 2px; background: currentColor; }
+.sidebar { position: fixed; z-index: 25; inset: var(--topbar) auto 0 0; width: var(--sidebar); display: flex; flex-direction: column; padding: 1.25rem 1rem; color: #dce7e1; background: #123126; border-right: 1px solid rgba(255,255,255,.06); }
+.sidebar-intro { display: grid; gap: .15rem; padding: .4rem .75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,.08); }
+.sidebar-intro span, .sidebar-foot span, .sidebar-foot small { color: #92aa9e; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+.sidebar nav { display: grid; gap: .35rem; margin-top: 1.25rem; }
+.sidebar nav a { display: grid; grid-template-columns: 34px 1fr auto; gap: .7rem; align-items: center; padding: .7rem; border-radius: 11px; color: #b9cbc1; transition: .2s ease; }
+.sidebar nav a:hover, .sidebar nav a.active { color: white; background: rgba(255,255,255,.08); }
+.sidebar nav a.active .nav-mark { color: var(--ink); background: var(--accent); }
+.sidebar nav a > span:nth-child(2) { display: grid; }
+.sidebar nav small { color: #829d8f; font-size: .7rem; }
+.sidebar nav em { display: inline-grid; min-width: 22px; height: 22px; place-items: center; border-radius: 20px; color: var(--ink); background: var(--accent); font-size: .7rem; font-style: normal; font-weight: 800; }
+.nav-mark { display: inline-grid; width: 30px; height: 30px; place-items: center; border-radius: 8px; color: #b7c9c0; background: rgba(255,255,255,.08); font-size: .72rem; font-weight: 800; }
+.nav-mark svg { width: 16px; height: 16px; }
+.sidebar-foot { display: grid; margin-top: auto; padding: 1rem .75rem .25rem; border-top: 1px solid rgba(255,255,255,.08); }
+.nav-backdrop { display: none; }

@@ -1,0 +1,12 @@
+<nav class="pagination" aria-label="Pagination">
+  <button class="button ghost small" [disabled]="meta.page <= 1" (click)="pageChange.emit(meta.page - 1)">
+    Previous
+  </button>
+  <span>
+    Page <b>{{ meta.page }}</b> of <b>{{ meta.pages || 1 }}</b>
+    <small>{{ meta.total }} {{ itemLabel }}</small>
+  </span>
+  <button class="button ghost small" [disabled]="meta.page >= meta.pages" (click)="pageChange.emit(meta.page + 1)">
+    Next
+  </button>
+</nav>

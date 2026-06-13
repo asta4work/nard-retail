@@ -1,0 +1,95 @@
+<section class="page">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Access control</p>
+      <h1>Users</h1>
+      <p>Create employee accounts and manage roles or access.</p>
+    </div>
+  </div>
+
+  <div class="user-layout">
+    <form class="panel form-card" [formGroup]="form" (ngSubmit)="create()">
+      <h2>Add user</h2>
+      <label>
+        Name
+        <input formControlName="name">
+      </label>
+      <label>
+        Email
+        <input type="email" formControlName="email">
+      </label>
+      <label>
+        Temporary password
+        <input type="password" formControlName="password">
+      </label>
+      <label>
+        Role
+        <select formControlName="role">
+          <option value="employee">Employee</option>
+          <option value="admin">Admin</option>
+        </select>
+      </label>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      <button class="button primary wide" [disabled]="form.invalid || loading()">
+        {{ loading() ? 'Creating...' : 'Create user' }}
+      </button>
+    </form>
+
+    <article class="panel table-panel">
+      <div class="section-head user-count">
+        <h2>All users</h2>
+        <span>{{ users().length }} total</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td data-label="User">
+                <b>{{ user.name }}</b><br>
+                <span class="muted">{{ user.email }}</span>
+              </td>
+              <td data-label="Role">
+                <select
+                  [value]="user.role"
+                  [disabled]="user.id === auth.user?.id"
+                  (change)="setRole(user, $any($event.target).value)"
+                >
+                  <option value="employee">Employee</option>
+                  <option value="admin">Admin</option>
+                </select>
+              </td>
+              <td data-label="Created">{{ user.createdAt | date:'mediumDate' }}</td>
+              <td data-label="Status">
+                <span class="status" [class.inactive]="!user.active">
+                  {{ user.active ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
+              <td>
+                <button class="button ghost small" [disabled]="user.id === auth.user?.id" (click)="toggle(user)">
+                  {{ user.active ? 'Deactivate' : 'Activate' }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="empty">No users found.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </article>
+  </div>
+</section>

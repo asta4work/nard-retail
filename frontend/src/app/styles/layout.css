@@ -1,0 +1,28 @@
+.page { width: min(1380px, calc(100% - 3rem)); margin: auto; padding: 2.75rem 0 5rem; }
+.page.narrow { width: min(820px, calc(100% - 3rem)); }
+.page-head, .hero, .section-head { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+.page-head, .hero { margin-bottom: 2rem; }
+.page-head > div > p:last-child { margin-bottom: 0; color: var(--muted); }
+.hero { min-height: 210px; padding: 2.5rem; border-radius: 22px; color: white; background: linear-gradient(120deg, #0a503a, #123a2c); box-shadow: var(--shadow); }
+.hero p:not(.eyebrow) { max-width: 600px; margin-bottom: 0; color: #c8d8d0; font-size: 1rem; }
+.hero .actions { margin-top: 1rem; }
+.hero-ghost { border-color: rgba(255,255,255,.25) !important; color: white !important; }
+.eyebrow { margin-bottom: .65rem; color: var(--primary); font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.hero .eyebrow, .login-copy .eyebrow { color: var(--accent); }
+.muted, .hint { color: var(--muted); }
+.hint { margin: 1rem 0 0; font-size: .75rem; }
+.back { display: inline-block; margin-bottom: 1.25rem; font-weight: 600; }
+
+.panel { border: 1px solid rgba(210, 222, 215, .9); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); }
+.grid { display: grid; gap: 1.25rem; margin-top: 1.25rem; }
+.grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid > .panel { padding: 1.5rem; }
+.section-head { margin-bottom: 1.25rem; }
+.section-head h2 { margin: 0; }
+.metrics { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+.metric { position: relative; overflow: hidden; min-height: 150px; padding: 1.4rem; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+.metric::after { content: ""; position: absolute; width: 85px; height: 85px; right: -30px; bottom: -30px; border-radius: 50%; background: #dcebe2; }
+.metric.accent::after { background: var(--accent); }
+.metric.warning::after { background: #f9d691; }
+.metric span, .metric small { display: block; color: var(--muted); }
+.metric strong { display: block; margin: .5rem 0 .25rem; font-size: clamp(1.6rem, 2.5vw, 2.3rem); letter-spacing: -.06em; }
