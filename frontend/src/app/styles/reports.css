@@ -9,6 +9,7 @@
 .rank-list { display: grid; }
 .rank-list > div { display: flex; align-items: center; gap: 1rem; padding: .75rem; border-bottom: 1px solid var(--line); }
 .rank-list em { margin-left: auto; font-style: normal; font-weight: 700; }
+[dir="rtl"] .rank-list em { margin-right: auto; margin-left: 0; }
 .rank { display: inline-grid !important; width: 28px; height: 28px; place-items: center; border-radius: 50%; background: var(--accent); font-weight: 700; }
 .user-layout { display: grid; grid-template-columns: 320px 1fr; gap: 1.25rem; align-items: start; }
 .user-layout form label { margin: 1rem 0; }
@@ -22,3 +23,6 @@
 .login-card { width: min(440px, 100%); justify-self: end; padding: 2rem; color: var(--ink); }
 .login-card label { margin-top: 1rem; }
 .login-card .button { margin-top: 1.25rem; }
+.login-language { position: absolute; top: 1.5rem; right: 1.5rem; color: white !important; border-color: rgba(255,255,255,.3) !important; }
+[dir="rtl"] .login-language { right: auto; left: 1.5rem; }
+[dir="rtl"] .login-card { justify-self: start; }

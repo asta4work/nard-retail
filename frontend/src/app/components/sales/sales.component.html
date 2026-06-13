@@ -1,36 +1,51 @@
 <section class="page">
   <div class="page-head">
     <div>
-      <p class="eyebrow">Transaction ledger</p>
-      <h1>Sales history</h1>
-      <p>Find invoices, inspect line items, and reprint receipts.</p>
+      <p class="eyebrow">{{ 'Transaction ledger' | t }}</p>
+      <h1>{{ 'Sales history' | t }}</h1>
+      <p>{{ 'Find invoices, inspect line items, and reprint receipts.' | t }}</p>
     </div>
   </div>
 
-  <form class="filters sales-filters panel" [formGroup]="filters">
-    <label class="search">
-      Search
-      <input formControlName="search" placeholder="Invoice, customer, or product">
-    </label>
-    <label>
-      From
-      <input type="date" formControlName="from">
-    </label>
-    <label>
-      To
-      <input type="date" formControlName="to">
-    </label>
-    <label>
-      Min amount
-      <input type="number" min="0" formControlName="minAmount" placeholder="0">
-    </label>
-    <label>
-      Max amount
-      <input type="number" min="0" formControlName="maxAmount" placeholder="Any">
-    </label>
-    <button class="button ghost small filter-clear" type="button" (click)="filters.reset(filterDefaults)">
-      Clear filters
-    </button>
+  <form class="filter-studio panel" [formGroup]="filters">
+    <div class="filter-command">
+      <label class="command-search">
+        <svg lucideIcon="search" aria-hidden="true"></svg>
+        <span class="sr-only">{{ 'Search invoices' | t }}</span>
+        <input formControlName="search" [placeholder]="'Invoice, customer, or product' | t">
+      </label>
+      <button class="button ghost filter-toggle" type="button" [class.active]="advancedOpen" (click)="advancedOpen = !advancedOpen">
+        <svg lucideIcon="sliders-horizontal" aria-hidden="true"></svg>
+        {{ 'Filters' | t }}
+        @if (activeFilterCount) { <span>{{ activeFilterCount }}</span> }
+      </button>
+      @if (activeFilterCount) {
+        <button class="button ghost icon-clear" type="button" [attr.aria-label]="'Clear all' | t" (click)="filters.reset(filterDefaults)">
+          <svg lucideIcon="x" aria-hidden="true"></svg>
+        </button>
+      }
+    </div>
+    @if (advancedOpen) {
+      <div class="advanced-filters sales-advanced">
+        <fieldset>
+          <legend>{{ 'Date range' | t }}</legend>
+          <div class="range-inputs">
+            <input type="date" formControlName="from" [attr.aria-label]="'From' | t">
+            <span>&ndash;</span>
+            <input type="date" formControlName="to" [attr.aria-label]="'To' | t">
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>{{ 'Amount range' | t }}</legend>
+          <div class="range-inputs">
+            <input type="number" min="0" formControlName="minAmount" [placeholder]="'Minimum' | t">
+            <span>&ndash;</span>
+            <input type="number" min="0" formControlName="maxAmount" [placeholder]="'Maximum' | t">
+          </div>
+        </fieldset>
+        <button class="button ghost small" type="button" (click)="filters.reset(filterDefaults)">{{ 'Clear all' | t }}</button>
+      </div>
+    }
   </form>
 
   @if (error) {
@@ -39,35 +54,35 @@
 
   @if (page$ | async; as page) {
     <div class="result-summary">
-      <b>{{ page.meta.total }} transactions</b>
-      <span>Select details to inspect an invoice.</span>
+      <b>{{ page.meta.total }} {{ 'transactions' | t }}</b>
+      <span>{{ 'Select details to inspect an invoice.' | t }}</span>
     </div>
 
     <article class="panel table-panel" [class.loading]="loading">
       <table>
         <thead>
           <tr>
-            <th>Invoice</th>
-            <th>Customer</th>
-            <th>Processed by</th>
-            <th>Date</th>
-            <th>Items</th>
-            <th>Total</th>
+            <th>{{ 'Invoice' | t }}</th>
+            <th>{{ 'Customer' | t }}</th>
+            <th>{{ 'Processed by' | t }}</th>
+            <th>{{ 'Date' | t }}</th>
+            <th>{{ 'Items' | t }}</th>
+            <th>{{ 'Total' | t }}</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
           @for (sale of page.data; track sale.id) {
             <tr>
-              <td data-label="Invoice"><b>#{{ sale.id }}</b></td>
-              <td data-label="Customer">{{ sale.customerName || 'Walk-in' }}</td>
-              <td data-label="Processed by">{{ sale.createdBy.name }}</td>
-              <td data-label="Date">{{ sale.createdAt | date:'medium' }}</td>
-              <td data-label="Items">{{ itemCount(sale) }}</td>
-              <td data-label="Total"><b>{{ sale.totalAmount | currency }}</b></td>
+              <td [attr.data-label]="'Invoice' | t"><b>#{{ sale.id }}</b></td>
+              <td [attr.data-label]="'Customer' | t">{{ sale.customerName || ('Walk-in customer' | t) }}</td>
+              <td [attr.data-label]="'Processed by' | t">{{ sale.createdBy.name }}</td>
+              <td [attr.data-label]="'Date' | t">{{ sale.createdAt | appDate:'medium' }}</td>
+              <td [attr.data-label]="'Items' | t">{{ itemCount(sale) }}</td>
+              <td [attr.data-label]="'Total' | t"><b>{{ sale.totalAmount | money }}</b></td>
               <td>
                 <button class="button ghost small" (click)="toggleDetails(sale)">
-                  {{ selected?.id === sale.id ? 'Close' : 'Details' }}
+                  {{ (selected?.id === sale.id ? 'Close' : 'Details') | t }}
                 </button>
               </td>
             </tr>
@@ -75,20 +90,13 @@
             @if (selected?.id === sale.id) {
               <tr class="details-row">
                 <td colspan="7">
-                  <div class="invoice-lines">
-                    @for (item of sale.items; track item.id) {
-                      <span>{{ item.quantity }} x {{ item.product.name }}</span>
-                      <b>{{ item.lineTotal | currency }}</b>
-                    }
-                  </div>
-                  <div class="invoice-total">Invoice total <b>{{ sale.totalAmount | currency }}</b></div>
-                  <button class="button ghost small" (click)="print()">Print invoice</button>
+                  <app-invoice [invoice]="sale" />
                 </td>
               </tr>
             }
           } @empty {
             <tr>
-              <td colspan="7" class="empty">No transactions match these filters.</td>
+              <td colspan="7" class="empty">{{ 'No transactions match these filters.' | t }}</td>
             </tr>
           }
         </tbody>

@@ -1,65 +1,99 @@
 <section class="page">
   <div class="page-head">
     <div>
-      <p class="eyebrow">Catalog</p>
-      <h1>Products</h1>
-      <p>Find products, monitor availability, and keep inventory accurate.</p>
+      <p class="eyebrow">{{ 'Catalog' | t }}</p>
+      <h1>{{ 'Products' | t }}</h1>
+      <p>{{ 'Find products, monitor availability, and keep inventory accurate.' | t }}</p>
     </div>
 
     @if (auth.isAdmin) {
-      <a class="button primary" routerLink="/products/new">Add product</a>
+      <a class="button primary" routerLink="/products/new">{{ 'Add product' | t }}</a>
     }
   </div>
 
-  <form class="filters panel" [formGroup]="filters">
-    <label class="search">
-      Search
-      <input formControlName="search" placeholder="Name or description">
-    </label>
-
-    <label>
-      Category
-      <select formControlName="category">
-        <option value="">All categories</option>
-        @for (category of categories; track category) {
-          <option [value]="category">{{ category }}</option>
+  <form class="filter-studio panel" [formGroup]="filters">
+    <div class="filter-command">
+      <label class="command-search">
+        <svg lucideIcon="search" aria-hidden="true"></svg>
+        <span class="sr-only">{{ 'Search products' | t }}</span>
+        <input
+          data-hotkey-search
+          formControlName="search"
+          [placeholder]="'Search by name or description' | t"
+        >
+        <kbd>Alt F</kbd>
+      </label>
+      <button class="button ghost filter-toggle" type="button" [class.active]="advancedOpen" (click)="advancedOpen = !advancedOpen">
+        <svg lucideIcon="sliders-horizontal" aria-hidden="true"></svg>
+        {{ 'Filters' | t }}
+        @if (activeFilterCount) {
+          <span>{{ activeFilterCount }}</span>
         }
-      </select>
-    </label>
+      </button>
+      @if (activeFilterCount) {
+        <button class="button ghost icon-clear" type="button" [attr.aria-label]="'Clear all' | t" (click)="filters.reset(filterDefaults)">
+          <svg lucideIcon="x" aria-hidden="true"></svg>
+        </button>
+      }
+    </div>
 
-    <label>
-      Availability
-      <select formControlName="availability">
-        <option value="all">All stock</option>
-        <option value="in-stock">In stock</option>
-        <option value="low-stock">Low stock</option>
-        <option value="out-of-stock">Out of stock</option>
-      </select>
-    </label>
+    <div class="filter-chips" role="group" [attr.aria-label]="'Filters' | t">
+      @for (availability of [
+        { value: 'all', label: 'All stock' },
+        { value: 'in-stock', label: 'In stock' },
+        { value: 'low-stock', label: 'Low stock' },
+        { value: 'out-of-stock', label: 'Out of stock' }
+      ]; track availability.value) {
+        <button
+          type="button"
+          [class.active]="filters.controls.availability.value === availability.value"
+          (click)="setAvailability(availability.value)"
+        >
+          {{ availability.label | t }}
+        </button>
+      }
+    </div>
 
-    <label>
-      Min price
-      <input type="number" min="0" formControlName="minPrice" placeholder="0">
-    </label>
-
-    <label>
-      Max price
-      <input type="number" min="0" formControlName="maxPrice" placeholder="Any">
-    </label>
-
-    <label>
-      Sort
-      <select formControlName="sort">
-        <option value="newest">Newest</option>
-        <option value="name">Name</option>
-        <option value="price">Price</option>
-        <option value="stock">Stock</option>
-      </select>
-    </label>
-
-    <button class="button ghost small filter-clear" type="button" (click)="filters.reset(filterDefaults)">
-      Clear filters
-    </button>
+    @if (advancedOpen) {
+      <div class="advanced-filters">
+        <label>
+          {{ 'Category' | t }}
+          <select formControlName="category">
+            <option value="">{{ 'All categories' | t }}</option>
+            @for (category of categories; track category) {
+              <option [value]="category">{{ category }}</option>
+            }
+          </select>
+        </label>
+        <fieldset>
+          <legend>{{ 'Price range' | t }}</legend>
+          <div class="range-inputs">
+            <input type="number" min="0" formControlName="minPrice" [placeholder]="'Minimum' | t">
+            <span>&ndash;</span>
+            <input type="number" min="0" formControlName="maxPrice" [placeholder]="'Maximum' | t">
+          </div>
+        </fieldset>
+        <label>
+          {{ 'Sort by' | t }}
+          <select formControlName="sort">
+            <option value="newest">{{ 'Newest' | t }}</option>
+            <option value="name">{{ 'Name' | t }}</option>
+            <option value="price">{{ 'Price' | t }}</option>
+            <option value="stock">{{ 'Stock' | t }}</option>
+          </select>
+        </label>
+        <label>
+          {{ 'Sort by' | t }}
+          <select formControlName="order">
+            <option value="DESC">{{ 'Descending' | t }}</option>
+            <option value="ASC">{{ 'Ascending' | t }}</option>
+          </select>
+        </label>
+        <button class="button ghost small" type="button" (click)="filters.reset(filterDefaults)">
+          {{ 'Clear all' | t }}
+        </button>
+      </div>
+    }
   </form>
 
   @if (error) {
@@ -68,8 +102,8 @@
 
   @if (page$ | async; as page) {
     <div class="result-summary">
-      <b>{{ page.meta.total }} products</b>
-      <span>Live stock updates are applied automatically.</span>
+      <b>{{ page.meta.total }} {{ 'products' | t }}</b>
+      <span>{{ 'Live stock updates are applied automatically.' | t }}</span>
     </div>
 
     <div class="product-grid" [class.loading]="loading" aria-live="polite">
@@ -82,7 +116,7 @@
               [class.danger]="product.stockQuantity === 0"
               [class.warning]="product.stockQuantity > 0 && product.stockQuantity <= 10"
             >
-              {{ product.stockQuantity }} in stock
+              {{ product.stockQuantity }} {{ 'in stock' | t }}
             </span>
           </div>
 
@@ -92,26 +126,26 @@
           <a [routerLink]="['/products', product.id]">
             <h3>{{ product.name }}</h3>
           </a>
-          <p>{{ product.description || 'No description provided.' }}</p>
-          <strong>{{ product.price | currency }}</strong>
+          <p>{{ product.description || ('No description provided.' | t) }}</p>
+          <strong>{{ product.price | money }}</strong>
 
           <div class="actions">
             <button class="button primary small" [disabled]="product.stockQuantity === 0" (click)="cart.add(product)">
-              Add to cart
+              {{ 'Add to cart' | t }}
             </button>
-            <a class="button ghost small" [routerLink]="['/products', product.id]">View</a>
+            <a class="button ghost small" [routerLink]="['/products', product.id]">{{ 'View' | t }}</a>
 
             @if (auth.isAdmin) {
-              <a class="button ghost small" [routerLink]="['/products', product.id, 'edit']">Edit</a>
-              <button class="button danger small" type="button" (click)="remove(product)">Delete</button>
+              <a class="button ghost small" [routerLink]="['/products', product.id, 'edit']">{{ 'Edit' | t }}</a>
+              <button class="button danger small" type="button" (click)="remove(product)">{{ 'Delete' | t }}</button>
             }
           </div>
         </article>
       } @empty {
         <div class="panel empty span-all">
-          <h2>No matching products</h2>
-          <p>Try removing one or more filters.</p>
-          <button class="button ghost" type="button" (click)="filters.reset(filterDefaults)">Clear filters</button>
+          <h2>{{ 'No matching products' | t }}</h2>
+          <p>{{ 'Try removing one or more filters.' | t }}</p>
+          <button class="button ghost" type="button" (click)="filters.reset(filterDefaults)">{{ 'Clear filters' | t }}</button>
         </div>
       }
     </div>

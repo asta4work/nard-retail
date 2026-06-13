@@ -1,27 +1,27 @@
 <section class="page narrow">
   @if (product$ | async; as product) {
-    <a class="back" routerLink="/products">&larr; Back to products</a>
+    <a class="back" routerLink="/products">&larr; {{ 'Back to products' | t }}</a>
     <article class="panel detail-card">
       <div class="product-top">
         <span class="tag">{{ product.category }}</span>
-        <span class="stock" [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} in stock</span>
+        <span class="stock" [class.danger]="product.stockQuantity === 0">{{ product.stockQuantity }} {{ 'in stock' | t }}</span>
       </div>
       <span class="product-icon detail-icon" aria-hidden="true">
         <svg [lucideIcon]="product.icon || 'package'"></svg>
       </span>
       <h1>{{ product.name }}</h1>
-      <p class="detail-description">{{ product.description || 'No description provided.' }}</p>
-      <div class="detail-price">{{ product.price | currency }}</div>
+      <p class="detail-description">{{ product.description || ('No description provided.' | t) }}</p>
+      <div class="detail-price">{{ product.price | money }}</div>
       <dl>
-        <div><dt>Created</dt><dd>{{ product.createdAt | date:'medium' }}</dd></div>
-        <div><dt>Last updated</dt><dd>{{ product.updatedAt | date:'medium' }}</dd></div>
+        <div><dt>{{ 'Created date' | t }}</dt><dd>{{ product.createdAt | appDate:'medium' }}</dd></div>
+        <div><dt>{{ 'Last updated' | t }}</dt><dd>{{ product.updatedAt | appDate:'medium' }}</dd></div>
       </dl>
       <div class="actions">
         <button class="button primary" [disabled]="product.stockQuantity === 0" (click)="cart.add(product)">
-          Add to cart
+          {{ 'Add to cart' | t }}
         </button>
         @if (auth.isAdmin) {
-          <a class="button ghost" [routerLink]="['/products', product.id, 'edit']">Edit product</a>
+          <a class="button ghost" [routerLink]="['/products', product.id, 'edit']">{{ 'Edit product' | t }}</a>
         }
       </div>
     </article>

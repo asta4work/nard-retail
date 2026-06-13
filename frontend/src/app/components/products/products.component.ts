@@ -1,4 +1,4 @@
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -12,10 +12,12 @@ import { ProductsService } from '@app/services/products.service';
 import { getErrorMessage } from '@app/utils/http.utils';
 import { handlePageRequest } from '@app/utils/request.utils';
 import { LucideDynamicIcon } from '@lucide/angular';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
+import { LocalizedCurrencyPipe } from '@app/pipes/localized-currency.pipe';
 
 @Component({
   standalone: true,
-  imports: [AsyncPipe, CurrencyPipe, LucideDynamicIcon, PaginationComponent, ReactiveFormsModule, RouterLink],
+  imports: [AsyncPipe, LocalizedCurrencyPipe, LucideDynamicIcon, PaginationComponent, ReactiveFormsModule, RouterLink, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './products.component.html',
 })
@@ -29,6 +31,7 @@ export class ProductsComponent {
   categories: string[] = [];
   loading = false;
   error = '';
+  advancedOpen = false;
   readonly filterDefaults = {
     search: '',
     category: '',
@@ -66,5 +69,22 @@ export class ProductsComponent {
       next: () => this.filters.patchValue({ page: 1 }),
       error: (error) => this.error = getErrorMessage(error, 'Unable to delete product'),
     });
+  }
+
+  setAvailability(availability: string) {
+    this.filters.patchValue({ availability, page: 1 });
+  }
+
+  get activeFilterCount() {
+    const filters = this.filters.getRawValue();
+    return [
+      filters.search,
+      filters.category,
+      filters.availability !== 'all',
+      filters.minPrice,
+      filters.maxPrice,
+      filters.sort !== 'newest',
+      filters.order !== 'DESC',
+    ].filter(Boolean).length;
   }
 }

@@ -1,0 +1,31 @@
+@if (hotkeys.open()) {
+  <button class="dialog-backdrop" type="button" [attr.aria-label]="'Close' | t" (click)="hotkeys.close()"></button>
+  <section class="shortcut-dialog panel" role="dialog" aria-modal="true" aria-labelledby="shortcut-title">
+    <header>
+      <div>
+        <p class="eyebrow">{{ 'Keyboard shortcuts' | t }}</p>
+        <h2 id="shortcut-title">{{ 'Move faster in RetailOps' | t }}</h2>
+        <p>{{ 'Press shortcuts anywhere outside a text field.' | t }}</p>
+      </div>
+      <button class="button ghost small" type="button" (click)="hotkeys.close()">{{ 'Close' | t }}</button>
+    </header>
+
+    @for (group of groups; track group) {
+      <div class="shortcut-group">
+        <h3>{{ group | t }}</h3>
+        @for (shortcut of hotkeys.definitions; track shortcut.label) {
+          @if (shortcut.group === group) {
+            <div class="shortcut-row">
+              <span>{{ shortcut.label | t }}</span>
+              <span class="key-group">
+                @for (key of shortcut.keys; track key) {
+                  <kbd>{{ key }}</kbd>
+                }
+              </span>
+            </div>
+          }
+        }
+      </div>
+    }
+  </section>
+}

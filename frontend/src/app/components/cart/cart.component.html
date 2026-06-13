@@ -1,54 +1,21 @@
 <section class="page">
   <div class="page-head">
     <div>
-      <p class="eyebrow">Point of sale</p>
-      <h1>Current cart</h1>
-      <p>Stock is validated again during checkout.</p>
+      <p class="eyebrow">{{ 'Point of sale' | t }}</p>
+      <h1>{{ 'Current cart' | t }}</h1>
+      <p>{{ 'Stock is validated again during checkout.' | t }}</p>
     </div>
-    <a class="button ghost" routerLink="/products">Add products</a>
+    <a class="button ghost" routerLink="/products">{{ 'Add products' | t }}</a>
   </div>
 
   @if (invoice) {
-    <article class="panel invoice" id="invoice">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">Payment complete</p>
-          <h2>Invoice #{{ invoice.id }}</h2>
-        </div>
-        <button class="button ghost small no-print" (click)="print()">Print invoice</button>
+    <div class="invoice-screen">
+      <div class="payment-complete no-print">
+        <div><span>&check;</span><strong>{{ 'Payment complete' | t }}</strong></div>
+        <button class="button ghost" (click)="invoice = undefined">{{ 'Start another sale' | t }}</button>
       </div>
-
-      <p>{{ invoice.createdAt | date:'full' }} &middot; {{ invoice.customerName || 'Walk-in customer' }}</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Unit price</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of invoice.items; track item.id) {
-            <tr>
-              <td>{{ item.product.name }}</td>
-              <td>{{ item.quantity }}</td>
-              <td>{{ item.unitPrice | currency }}</td>
-              <td>{{ item.lineTotal | currency }}</td>
-            </tr>
-          }
-        </tbody>
-        <tfoot>
-          <tr>
-            <th colspan="3">Total</th>
-            <th>{{ invoice.totalAmount | currency }}</th>
-          </tr>
-        </tfoot>
-      </table>
-
-      <button class="button primary no-print" (click)="invoice = undefined">Start another sale</button>
-    </article>
+      <app-invoice [invoice]="invoice" />
+    </div>
   } @else if (cart.items$ | async; as items) {
     @if (items.length) {
       <div class="cart-layout">
@@ -58,36 +25,36 @@
               <div class="cart-line">
                 <div>
                   <b>{{ item.product.name }}</b>
-                  <small>{{ item.product.price | currency }} each &middot; {{ item.product.stockQuantity }} available</small>
+                  <small>{{ item.product.price | money }} {{ 'each' | t }} &middot; {{ item.product.stockQuantity }} {{ 'available' | t }}</small>
                 </div>
                 <input
-                  aria-label="Quantity"
+                  [attr.aria-label]="'Quantity' | t"
                   type="number"
                   min="1"
                   [max]="item.product.stockQuantity"
                   [value]="item.quantity"
                   (change)="cart.update(item.product.id, $any($event.target).valueAsNumber)"
                 >
-                <strong>{{ (+item.product.price * item.quantity) | currency }}</strong>
-                <button class="icon-button" aria-label="Remove" (click)="cart.remove(item.product.id)">&times;</button>
+                <strong>{{ (+item.product.price * item.quantity) | money }}</strong>
+                <button class="icon-button" [attr.aria-label]="'Remove' | t" (click)="cart.remove(item.product.id)">&times;</button>
               </div>
             }
           </div>
         </article>
 
         <aside class="panel checkout-card">
-          <h2>Checkout</h2>
+          <h2>{{ 'Checkout' | t }}</h2>
           <label>
-            Customer name <span class="muted">(optional)</span>
-            <input [formControl]="customerName" placeholder="Walk-in customer">
+            {{ 'Customer name' | t }} <span class="muted">({{ 'optional' | t }})</span>
+            <input [formControl]="customerName" [placeholder]="'Walk-in customer' | t">
           </label>
           <div class="total-row">
-            <span>Items</span>
+            <span>{{ 'Items' | t }}</span>
             <b>{{ cart.count }}</b>
           </div>
           <div class="total-row grand">
-            <span>Total</span>
-            <b>{{ cart.total | currency }}</b>
+            <span>{{ 'Total' | t }}</span>
+            <b>{{ cart.total | money }}</b>
           </div>
 
           @if (error) {
@@ -95,15 +62,15 @@
           }
 
           <button class="button primary wide" [disabled]="loading" (click)="checkout()">
-            {{ loading ? 'Processing...' : 'Complete sale' }}
+            {{ (loading ? 'Processing...' : 'Complete sale') | t }}
           </button>
         </aside>
       </div>
     } @else {
       <div class="panel empty">
-        <h2>Your cart is empty</h2>
-        <p>Add in-stock products to start a sale.</p>
-        <a class="button primary" routerLink="/products">Browse products</a>
+        <h2>{{ 'Your cart is empty' | t }}</h2>
+        <p>{{ 'Add in-stock products to start a sale.' | t }}</p>
+        <a class="button primary" routerLink="/products">{{ 'Browse products' | t }}</a>
       </div>
     }
   }

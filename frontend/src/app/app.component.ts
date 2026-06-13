@@ -9,11 +9,15 @@ import { RealtimeService } from '@app/services/realtime.service';
 import { NavigationItem } from '@app/types';
 import { ProductsService } from '@app/services/products.service';
 import { LucideDynamicIcon } from '@lucide/angular';
+import { HotkeysDialogComponent } from '@app/components/hotkeys-dialog/hotkeys-dialog.component';
+import { HotkeysService } from '@app/services/hotkeys.service';
+import { I18nService } from '@app/services/i18n.service';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [AsyncPipe, LucideDynamicIcon, RouterOutlet, RouterLink, RouterLinkActive],
+  imports: [AsyncPipe, HotkeysDialogComponent, LucideDynamicIcon, RouterOutlet, RouterLink, RouterLinkActive, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -21,6 +25,8 @@ import { LucideDynamicIcon } from '@lucide/angular';
 export class AppComponent {
   readonly auth = inject(AuthService);
   readonly cart = inject(CartService);
+  readonly hotkeys = inject(HotkeysService);
+  readonly i18n = inject(I18nService);
   private readonly realtime = inject(RealtimeService);
   private readonly products = inject(ProductsService);
   private readonly router = inject(Router);

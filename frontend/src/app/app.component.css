@@ -4,6 +4,8 @@ main.authenticated { min-height: 100vh; margin-left: var(--sidebar); padding-top
 .brand { color: white; font-size: 1.35rem; font-weight: 800; letter-spacing: -.05em; }
 .brand span { color: var(--accent); }
 .topbar-actions { display: flex; align-items: center; gap: .7rem; margin-left: auto; }
+.topbar-tool { display: inline-flex; align-items: center; gap: .35rem; min-height: 34px; padding: .35rem .6rem; border: 1px solid #496158; border-radius: 9px; color: white; background: transparent; cursor: pointer; font-size: .72rem; font-weight: 700; }
+.topbar-tool svg { width: 15px; height: 15px; }
 .user-avatar { display: inline-grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; color: var(--ink); background: var(--accent); font-weight: 800; text-transform: uppercase; }
 .user-summary { display: grid; line-height: 1.2; }
 .user-summary small { color: #aebfb6; text-transform: capitalize; }
@@ -13,8 +15,9 @@ main.authenticated { min-height: 100vh; margin-left: var(--sidebar); padding-top
 .sidebar-intro { display: grid; gap: .15rem; padding: .4rem .75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,.08); }
 .sidebar-intro span, .sidebar-foot span, .sidebar-foot small { color: #92aa9e; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
 .sidebar nav { display: grid; gap: .35rem; margin-top: 1.25rem; }
-.sidebar nav a { display: grid; grid-template-columns: 34px 1fr auto; gap: .7rem; align-items: center; padding: .7rem; border-radius: 11px; color: #b9cbc1; transition: .2s ease; }
+.sidebar nav a, .sidebar-tools button { display: grid; width: 100%; grid-template-columns: 34px 1fr auto; gap: .7rem; align-items: center; padding: .7rem; border: 0; border-radius: 11px; color: #b9cbc1; background: transparent; text-align: start; transition: .2s ease; cursor: pointer; }
 .sidebar nav a:hover, .sidebar nav a.active { color: white; background: rgba(255,255,255,.08); }
+.sidebar-tools button:hover { color: white; background: rgba(255,255,255,.08); }
 .sidebar nav a.active .nav-mark { color: var(--ink); background: var(--accent); }
 .sidebar nav a > span:nth-child(2) { display: grid; }
 .sidebar nav small { color: #829d8f; font-size: .7rem; }
@@ -22,4 +25,9 @@ main.authenticated { min-height: 100vh; margin-left: var(--sidebar); padding-top
 .nav-mark { display: inline-grid; width: 30px; height: 30px; place-items: center; border-radius: 8px; color: #b7c9c0; background: rgba(255,255,255,.08); font-size: .72rem; font-weight: 800; }
 .nav-mark svg { width: 16px; height: 16px; }
 .sidebar-foot { display: grid; margin-top: auto; padding: 1rem .75rem .25rem; border-top: 1px solid rgba(255,255,255,.08); }
+.sidebar-tools { display: grid; gap: .25rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,.08); }
+.sidebar-tools button > span:nth-child(2) { display: grid; }
+.sidebar-tools small { color: #829d8f; font-size: .7rem; }
+.sidebar-tools + .sidebar-foot { margin-top: .75rem; }
 .nav-backdrop { display: none; }
+.hotkey-notice { position: fixed; z-index: 90; right: 1.5rem; bottom: 1.5rem; max-width: min(360px, calc(100% - 3rem)); padding: .85rem 1rem; border-radius: 10px; color: white; background: #123126; box-shadow: var(--shadow); font-weight: 700; }

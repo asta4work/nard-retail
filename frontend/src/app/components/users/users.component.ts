@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '@app/services/auth.service';
@@ -7,10 +6,12 @@ import { User } from '@app/models';
 import { Role } from '@app/types';
 import { UsersService } from '@app/services/users.service';
 import { handleRequest } from '@app/utils/request.utils';
+import { LocalizedDatePipe } from '@app/pipes/localized-date.pipe';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
 
 @Component({
   standalone: true,
-  imports: [DatePipe, ReactiveFormsModule],
+  imports: [LocalizedDatePipe, ReactiveFormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './users.component.html',
 })

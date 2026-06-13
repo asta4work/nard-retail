@@ -5,10 +5,11 @@ import { ProductsService } from '@app/services/products.service';
 import { handleRequest } from '@app/utils/request.utils';
 import { PRODUCT_ICON_OPTIONS, ProductIcon } from '@app/types';
 import { LucideDynamicIcon } from '@lucide/angular';
+import { TranslatePipe } from '@app/pipes/translate.pipe';
 
 @Component({
   standalone: true,
-  imports: [LucideDynamicIcon, ReactiveFormsModule, RouterLink],
+  imports: [LucideDynamicIcon, ReactiveFormsModule, RouterLink, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './product-form.component.html',
 })
