@@ -35,7 +35,7 @@ export class SalesComponent {
     minAmount: '',
     maxAmount: '',
     page: 1,
-    limit: 20,
+    limit: 10,
   };
   readonly filters = this.fb.nonNullable.group(this.filterDefaults);
 

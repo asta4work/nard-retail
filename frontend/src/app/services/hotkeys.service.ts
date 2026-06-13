@@ -32,7 +32,7 @@ export class HotkeysService {
     { keys: ['Alt', '6'], label: 'Go to users', group: 'Navigation' },
     { keys: ['Alt', 'F'], label: 'Focus product search', group: 'Actions' },
     { keys: ['Alt', 'A'], label: 'Add first available product', group: 'Actions' },
-    { keys: ['Ctrl', 'Enter'], label: 'Complete current sale', group: 'Actions' },
+    { keys: ['Alt', 'S'], label: 'Complete current sale', group: 'Actions' },
     { keys: ['?'], label: 'Show keyboard shortcuts', group: 'Actions' },
   ];
 
@@ -58,7 +58,7 @@ export class HotkeysService {
     const typing = event.target instanceof HTMLInputElement ||
       event.target instanceof HTMLTextAreaElement ||
       event.target instanceof HTMLSelectElement;
-    if (typing && !(event.ctrlKey && event.key === 'Enter')) return;
+    if (typing && !(event.altKey && event.code === 'KeyS')) return;
 
     const routes: Record<string, string> = {
       Digit1: '/dashboard',
@@ -85,7 +85,7 @@ export class HotkeysService {
       this.addFirstAvailableProduct();
       return;
     }
-    if (event.ctrlKey && event.key === 'Enter') {
+    if (event.altKey && event.code === 'KeyS') {
       event.preventDefault();
       this.document.defaultView?.dispatchEvent(new Event('retail-complete-sale'));
       return;

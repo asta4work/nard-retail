@@ -49,5 +49,5 @@ export class ProductQueryDto {
   @IsOptional() @IsIn(['price', 'stock', 'newest', 'name']) sort = 'newest';
   @IsOptional() @IsIn(['ASC', 'DESC', 'asc', 'desc']) order = 'DESC';
   @IsOptional() @Type(() => Number) @IsInt() @Min(1) page = 1;
-  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 20;
+  @IsOptional() @Type(() => Number) @IsInt() @Min(1) @Max(100) limit = 10;
 }
