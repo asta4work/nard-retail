@@ -78,12 +78,26 @@ npm run init-db
 | `Alt+1` through `Alt+6` | Open dashboard, products, checkout, sales, reports, or users |
 | `Alt+F` | Open products and focus search |
 | `Alt+A` | Add the first available product to the cart |
-| `Ctrl+Enter` | Complete the current sale from checkout |
+| `Ctrl+S` | Complete the current sale from checkout |
 | `?` | Show all keyboard shortcuts |
 
-`npm run init-db` safely merges premade users, products, and demo sales into the configured
-database. Existing users and products are left unchanged, and demo sales are inserted only
-once. Seeded accounts use `ChangeMe123!` and should have their passwords changed.
+`npm run init-db` safely merges premade and bulk-generated users, products, and sales into
+the configured database. Existing users and products are left unchanged, and generated
+sales track their applied count so reruns do not duplicate them. Seeded accounts use
+`ChangeMe123!` and should have their passwords changed.
+
+Configure bulk generation in `.env`:
+
+| Variable | Default | Purpose |
+|---|---:|---|
+| `SEED_LOCALE` | `mixed` | Generate `en`, `ar`, or alternating `mixed` data |
+| `SEED_PRODUCT_COUNT` | `1000` | Number of generated products |
+| `SEED_USER_COUNT` | `100` | Number of generated users |
+| `SEED_SALE_COUNT` | `2500` | Target number of generated sales per locale mode |
+| `SEED_BATCH_SIZE` | `250` | Records processed per database batch |
+
+Set any count to `0` to disable that generated data type. Increasing a count later adds
+only the missing deterministic records.
 
 For a running Docker deployment:
 
