@@ -78,7 +78,7 @@ npm run init-db
 | `Alt+1` through `Alt+6` | Open dashboard, products, checkout, sales, reports, or users |
 | `Alt+F` | Open products and focus search |
 | `Alt+A` | Add the first available product to the cart |
-| `Ctrl+S` | Complete the current sale from checkout |
+| `Alt+S` | Complete the current sale from checkout |
 | `?` | Show all keyboard shortcuts |
 
 `npm run init-db` safely merges premade and bulk-generated users, products, and sales into
