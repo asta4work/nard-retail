@@ -1,7 +1,11 @@
-.bar-chart { height: 260px; display: flex; align-items: end; gap: .35rem; overflow-x: auto; padding-top: 1rem; }
-.bar-col { min-width: 18px; height: 100%; display: flex; flex: 1; flex-direction: column; justify-content: end; align-items: center; gap: .3rem; }
-.bar { width: 100%; max-width: 28px; min-height: 4px; border-radius: 4px 4px 0 0; background: var(--primary); }
-.bar-col small { color: var(--muted); font-size: .55rem; writing-mode: vertical-rl; }
+.reports-grid { align-items: start; }
+.trend-panel { overflow: hidden; }
+.bar-chart { display: grid; grid-template-columns: repeat(30, minmax(18px, 1fr)); gap: .35rem; overflow-x: auto; padding-top: .5rem; }
+.bar-col { display: grid; grid-template-rows: minmax(300px, 36vh) 1.4rem; min-width: 18px; gap: .45rem; align-items: end; }
+.bar-track { display: flex; height: 100%; align-items: end; border-bottom: 1px solid var(--line); background: linear-gradient(to top, rgba(10, 104, 71, .05), transparent 65%); }
+.bar { width: 100%; min-height: 4px; border-radius: 5px 5px 0 0; background: linear-gradient(to top, var(--primary-dark), var(--primary)); }
+.bar-col small { overflow: visible; color: var(--muted); font-size: .65rem; font-weight: 600; line-height: 1; text-align: center; white-space: nowrap; }
+.bar-col small.hidden { visibility: hidden; }
 .health-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; margin-bottom: 1.5rem; }
 .health-grid div { display: grid; padding: 1rem; border-radius: 8px; background: #f3f6f3; }
 .health-grid strong { font: 800 1.6rem "Manrope", sans-serif; }

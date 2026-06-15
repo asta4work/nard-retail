@@ -9,6 +9,7 @@ import { ReportsModule } from './reports/reports.module';
 import { SalesModule } from './sales/sales.module';
 import { UsersModule } from './users/users.module';
 import { databaseOptions } from './database/database.config';
+import { CacheModule } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { databaseOptions } from './database/database.config';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => databaseOptions((key) => config.get<string>(key)),
     }),
+    CacheModule,
     UsersModule,
     AuthModule,
     ProductsModule,

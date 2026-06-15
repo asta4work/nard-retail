@@ -1,4 +1,4 @@
-<section class="page">
+<section class="page reports-page">
   <div class="page-head">
     <div>
       <p class="eyebrow">{{ 'Business intelligence' | t }}</p>
@@ -36,14 +36,18 @@
       </article>
     </div>
 
-    <div class="grid two">
-      <article class="panel">
+    <div class="grid two reports-grid">
+      <article class="panel trend-panel">
         <div class="section-head"><h2>{{ '30-day sales trend' | t }}</h2></div>
-        <div class="bar-chart">
-          @for (day of sales.daily; track day.date) {
-            <div class="bar-col" [title]="day.date + ': $' + day.total">
-              <div class="bar" [style.height.%]="barHeight(day.total)"></div>
-              <small>{{ day.date.slice(5) }}</small>
+        <div class="bar-chart" role="img" [attr.aria-label]="'30-day sales trend' | t">
+          @for (day of sales.daily; track day.date; let index = $index) {
+            <div class="bar-col" [title]="trendTitle(day.date, day.total)">
+              <div class="bar-track">
+                <div class="bar" [style.height.%]="barHeight(day.total)"></div>
+              </div>
+              <small [class.hidden]="!showTrendLabel(index, sales.daily.length)">
+                {{ trendDate(day.date) }}
+              </small>
             </div>
           } @empty {
             <p class="empty">{{ 'No sales data yet.' | t }}</p>
