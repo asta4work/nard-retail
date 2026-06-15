@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Product } from '../products/product.entity';
-import { InventoryGateway, StockUpdate } from '../realtime/inventory.gateway';
+import { InventoryGateway } from '../realtime/inventory.gateway';
 import { User } from '../users/user.entity';
 import { CheckoutDto, SalesQueryDto } from './sales.dto';
 import { SaleItem } from './sale-item.entity';

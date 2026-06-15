@@ -75,10 +75,11 @@ npm run redis:start
 npm start
 ```
 
-`npm start` runs Nest and Angular together in one terminal and stops both when either
-process exits. Use `npm run start:backend` and `npm run start:frontend` when separate
-terminals are preferable. Only Redis runs in Docker; Nest and Angular run directly in
-watch mode. Stop Redis later with `npm run redis:stop`.
+`npm start` uses `concurrently` to run Nest and Angular together with labeled output in
+one terminal, and stops both when either process exits. Use `npm run start:backend` and
+`npm run start:frontend` when separate terminals are preferable. Only Redis runs in
+Docker; Nest and Angular run directly in watch mode. Stop Redis later with
+`npm run redis:stop`.
 
 The same `npm start` command works inside a Node.js demo container. Install all workspace
 dependencies, expose `BACKEND_PORT` and `FRONTEND_PORT`, mount or provide the root `.env`,
