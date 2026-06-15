@@ -62,6 +62,9 @@ npm run start:frontend
 The backend runs at `http://localhost:3000/api`; Angular runs at `http://localhost:4200`. The Angular development server proxies API and WebSocket traffic to the backend.
 For a backend running outside Docker, set `DB_HOST=localhost` or the hostname of your
 external MySQL server.
+For an existing or large external database, set `DB_SYNCHRONIZE=false`; schema
+synchronization blocks backend startup and therefore prevents API and Socket.IO traffic
+until it completes.
 
 Useful commands:
 
