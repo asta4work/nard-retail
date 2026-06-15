@@ -1,4 +1,4 @@
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
@@ -16,7 +16,10 @@ async function bootstrap() {
     transformOptions: { enableImplicitConversion: true },
   }));
   app.useGlobalFilters(new ApiExceptionFilter());
-  await app.listen(config.get<number>('PORT', 3000));
+  const port = config.get<number>('PORT', 3000);
+  const host = config.get<string>('HOST', '0.0.0.0');
+  await app.listen(port, host);
+  Logger.log(`Backend listening on http://${host}:${port}`, 'Bootstrap');
 }
 
 bootstrap();
