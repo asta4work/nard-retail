@@ -32,4 +32,15 @@ describe('InventoryGateway', () => {
 
     expect(emit).toHaveBeenCalledWith('product.changed', change);
   });
+
+  it('handles gateway lifecycle events', () => {
+    const logger = (gateway as unknown as { logger: { log: jest.Mock } }).logger;
+    jest.spyOn(logger, 'log').mockImplementation();
+
+    gateway.afterInit();
+    gateway.handleConnection({ id: 'connected' } as never);
+    gateway.handleDisconnect({ id: 'disconnected' } as never);
+
+    expect(logger.log).toHaveBeenCalledTimes(3);
+  });
 });

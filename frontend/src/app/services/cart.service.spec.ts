@@ -32,4 +32,29 @@ describe('CartService', () => {
 
     expect(cart.items).toEqual([]);
   });
+
+  it('updates, removes, and clears cart items', () => {
+    const cart = new CartService();
+    cart.add(product());
+    cart.update(1, 3);
+
+    expect(cart.items[0].quantity).toBe(3);
+
+    cart.remove(1);
+    expect(cart.items).toEqual([]);
+
+    cart.add(product());
+    cart.clear();
+    expect(cart.items).toEqual([]);
+  });
+
+  it('ignores unavailable products and unrelated stock updates', () => {
+    const cart = new CartService();
+    cart.add(product(0));
+    expect(cart.items).toEqual([]);
+
+    cart.add(product());
+    cart.syncStock(99, 1);
+    expect(cart.items[0].product.stockQuantity).toBe(5);
+  });
 });
