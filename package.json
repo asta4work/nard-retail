@@ -13,6 +13,12 @@
     "start:frontend": "npm run start -w frontend",
     "init-db": "npm run init-db -w backend",
     "test": "npm run test -w backend && npm run test -w frontend",
+    "test:backend": "npm run test -w backend",
+    "test:backend:watch": "npm run test:watch -w backend",
+    "test:backend:coverage": "npm run test -w backend -- --coverage",
+    "test:frontend": "npm run test -w frontend",
+    "test:frontend:watch": "npm run test:watch -w frontend",
+    "test:frontend:coverage": "npm run test:coverage -w frontend",
     "test:coverage": "npm run test -w backend -- --coverage && npm run test:coverage -w frontend",
     "test:e2e": "npm run test:e2e -w frontend",
     "perf": "k6 run performance/api.js"

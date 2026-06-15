@@ -65,28 +65,118 @@ Run `start:backend` and `start:frontend` in separate terminals. Only Redis runs 
 Docker; Nest and Angular run directly on Windows in watch mode. Stop Redis later with
 `npm run redis:stop`.
 
-The backend runs at `http://localhost:3000/api`; Angular runs at `http://localhost:4200`. The Angular development server proxies API and WebSocket traffic to the backend.
+By default, the backend runs at `http://localhost:3000/api`; Angular runs at
+`http://localhost:4200`. The Angular development server reads the root `.env` and
+proxies API and WebSocket traffic to the configured backend port.
 For a backend running outside Docker, set `DB_HOST=localhost` or the hostname of your
 external MySQL server.
 For an existing or large external database, set `DB_SYNCHRONIZE=false`; schema
 synchronization blocks backend startup and therefore prevents API and Socket.IO traffic
 until it completes.
 
-Useful commands:
+## Environment Configuration
 
-```bash
-npm run build
-npm test
-npm run test:coverage
-npm run test:e2e
-npm run init-db
+The root `.env` controls local development and Docker Compose:
+
+| Variable | Default | Purpose |
+|---|---:|---|
+| `BACKEND_HOST` | `0.0.0.0` | Address Nest listens on |
+| `BACKEND_PORT` | `3000` | Nest port and frontend proxy target |
+| `BACKEND_PROXY_HOST` | `127.0.0.1` | Host Angular uses to reach local Nest |
+| `FRONTEND_HOST` | `0.0.0.0` | Address Angular dev server listens on |
+| `FRONTEND_PORT` | `4200` | Angular dev server and Playwright port |
+| `DOCKER_FRONTEND_PORT` | `8080` | Host port for the Docker Nginx frontend |
+| `DOCKER_CORS_ORIGIN` | `http://localhost:8080` | Allowed frontend origin for Docker |
+| `CORS_ORIGIN` | `http://localhost:4200` | Allowed local origins, comma-separated |
+| `DB_HOST` / `DB_PORT` | `mysql` / `3306` | MySQL connection |
+| `REDIS_URL` / `REDIS_PORT` | `redis://localhost:6379` / `6379` | Redis connection and Docker host port |
+| `SWAGGER_ENABLED` | `true` | Enable or disable Swagger |
+| `SWAGGER_PATH` | `docs` | Swagger path under `/api` |
+
+When changing `FRONTEND_PORT`, also update `CORS_ORIGIN`. Multiple origins are supported:
+
+```env
+FRONTEND_PORT=4300
+CORS_ORIGIN=http://localhost:4300,http://127.0.0.1:4300
 ```
 
-Install Playwright's browser once before running its smoke tests:
+When changing `DOCKER_FRONTEND_PORT`, also update `DOCKER_CORS_ORIGIN`.
+
+## Testing
+
+Run all backend and frontend unit tests once:
+
+```bash
+npm test
+```
+
+Run each unit-test suite separately:
+
+```bash
+npm run test:backend
+npm run test:frontend
+```
+
+Keep tests running while editing:
+
+```bash
+npm run test:backend:watch
+npm run test:frontend:watch
+```
+
+Run one test file by passing part of its filename:
+
+```bash
+npm run test:backend -- products.service.spec.ts
+npm run test:frontend -- cart.service.spec.ts
+```
+
+Generate coverage summaries in the console and HTML reports under `coverage/`:
+
+```bash
+npm run test:backend:coverage
+npm run test:frontend:coverage
+npm run test:coverage
+```
+
+The console prints `PASS` or a green check for successful files, failed assertion details
+with file and line numbers, the number of passed/failed tests, and coverage percentages.
+Watch mode reruns affected tests after every saved change; press `q` to exit it.
+
+Install Playwright's browser once, then run browser tests:
 
 ```bash
 npx playwright install chromium
+npm run test:e2e
 ```
+
+Other useful commands:
+
+```bash
+npm run build
+npm run init-db
+npm run perf
+```
+
+## Swagger API Documentation
+
+Start the backend and open:
+
+```text
+http://localhost:3000/api/docs
+```
+
+The host, port, and final `docs` segment follow `BACKEND_PORT` and `SWAGGER_PATH`.
+For Docker, open `http://localhost:8080/api/docs` using the configured
+`DOCKER_FRONTEND_PORT`.
+
+To call protected endpoints in Swagger:
+
+1. Use `POST /api/auth/login`.
+2. Copy the returned `accessToken`.
+3. Select **Authorize** and enter the token.
+
+Set `SWAGGER_ENABLED=false` to disable the documentation endpoint.
 
 ## Redis Caching
 
