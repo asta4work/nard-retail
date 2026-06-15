@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Role } from '../common/role.enum';
 import { Roles } from '../common/roles.decorator';
 import { RolesGuard } from '../common/roles.guard';
@@ -7,6 +8,8 @@ import { CreateProductDto, ProductQueryDto, UpdateProductDto } from './product.d
 import { ProductsService } from './products.service';
 
 @Controller('products')
+@ApiTags('products')
+@ApiBearerAuth()
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class ProductsController {
   constructor(private readonly products: ProductsService) {}
