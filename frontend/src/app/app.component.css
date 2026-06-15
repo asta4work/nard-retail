@@ -31,3 +31,33 @@ main.authenticated { min-height: 100vh; margin-inline-start: var(--sidebar); pad
 .sidebar-tools + .sidebar-foot { margin-top: .75rem; }
 .nav-backdrop { display: none; }
 .hotkey-notice { position: fixed; z-index: 90; right: 1.5rem; bottom: 1.5rem; max-width: min(360px, calc(100% - 3rem)); padding: .85rem 1rem; border-radius: 10px; color: white; background: #123126; box-shadow: var(--shadow); font-weight: 700; }
+
+@media (max-width: 900px) {
+  main.authenticated { margin-inline-start: 0; }
+  .topbar { padding-inline: 1rem; }
+  .menu-toggle { display: block; flex: 0 0 auto; }
+  .sidebar {
+    z-index: 45;
+    inset-block: 0;
+    width: min(var(--sidebar), calc(100vw - 3rem));
+    visibility: hidden;
+    transform: translateX(-105%);
+    transition: transform .25s ease, visibility .25s;
+    box-shadow: 18px 0 45px rgba(9, 30, 22, .2);
+  }
+  .sidebar.open { visibility: visible; transform: translateX(0); }
+  .nav-backdrop { position: fixed; z-index: 40; inset: 0; display: block; width: 100%; border: 0; background: rgba(5, 20, 14, .52); }
+  [dir="rtl"] .sidebar { transform: translateX(105%); }
+  [dir="rtl"] .sidebar.open { transform: translateX(0); }
+}
+
+@media (max-width: 600px) {
+  .topbar { gap: .55rem; padding-inline: .65rem; }
+  .brand { font-size: 1.05rem; }
+  .topbar-actions { gap: .35rem; }
+  .topbar-tool, .sign-out { min-width: 36px; padding-inline: .5rem; }
+  .topbar-tool span, .user-summary, .quick-sale { display: none; }
+  .user-avatar { width: 32px; height: 32px; }
+  .hotkey-notice { right: .75rem; bottom: .75rem; max-width: calc(100% - 1.5rem); }
+  [dir="rtl"] .hotkey-notice { right: auto; left: .75rem; }
+}

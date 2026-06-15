@@ -7,9 +7,14 @@
   ],
   "scripts": {
     "build": "npm run build -w backend && npm run build -w frontend",
+    "redis:start": "docker compose up -d redis",
+    "redis:stop": "docker compose stop redis",
     "start:backend": "npm run start:dev -w backend",
     "start:frontend": "npm run start -w frontend",
     "init-db": "npm run init-db -w backend",
-    "test": "npm run test -w backend"
+    "test": "npm run test -w backend && npm run test -w frontend",
+    "test:coverage": "npm run test -w backend -- --coverage && npm run test:coverage -w frontend",
+    "test:e2e": "npm run test:e2e -w frontend",
+    "perf": "k6 run performance/api.js"
   }
 }

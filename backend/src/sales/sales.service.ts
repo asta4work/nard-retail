@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Product } from '../products/product.entity';
 import { InventoryGateway, StockUpdate } from '../realtime/inventory.gateway';
@@ -6,10 +6,16 @@ import { User } from '../users/user.entity';
 import { CheckoutDto, SalesQueryDto } from './sales.dto';
 import { SaleItem } from './sale-item.entity';
 import { Sale } from './sale.entity';
+import { CACHE_STORE, CacheStore } from '../cache/cache-store';
+import { pageResult } from '../common/page';
 
 @Injectable()
 export class SalesService {
-  constructor(private readonly dataSource: DataSource, private readonly inventoryGateway: InventoryGateway) {}
+  constructor(
+    private readonly dataSource: DataSource,
+    private readonly inventoryGateway: InventoryGateway,
+    @Inject(CACHE_STORE) private readonly cache: CacheStore,
+  ) {}
 
   async checkout(dto: CheckoutDto, user: User) {
     const normalized = new Map<number, number>();
@@ -54,32 +60,37 @@ export class SalesService {
       };
     });
 
+    await this.cache.invalidate('products:', 'reports:', 'sales:');
     this.inventoryGateway.broadcastStock(result.updates);
     return this.findOne(result.saleId);
   }
 
   async findAll(query: SalesQueryDto) {
-    const qb = this.dataSource.getRepository(Sale).createQueryBuilder('sale')
+    return this.cache.remember(this.cache.key('sales:list', query), async () => {
+      const qb = this.dataSource.getRepository(Sale).createQueryBuilder('sale')
       .leftJoinAndSelect('sale.items', 'item')
       .leftJoinAndSelect('item.product', 'product')
       .leftJoinAndSelect('sale.createdBy', 'createdBy')
       .orderBy('sale.createdAt', 'DESC')
       .skip((query.page - 1) * query.limit)
       .take(query.limit);
-    if (query.search) {
-      qb.andWhere('(sale.customerName LIKE :search OR CAST(sale.id AS CHAR) LIKE :search OR product.name LIKE :search)', { search: `%${query.search}%` });
-    }
-    if (query.from) qb.andWhere('sale.createdAt >= :from', { from: query.from });
-    if (query.to) qb.andWhere('sale.createdAt <= :to', { to: `${query.to} 23:59:59` });
-    if (query.minAmount !== undefined) qb.andWhere('sale.totalAmount >= :minAmount', { minAmount: query.minAmount });
-    if (query.maxAmount !== undefined) qb.andWhere('sale.totalAmount <= :maxAmount', { maxAmount: query.maxAmount });
-    const [data, total] = await qb.getManyAndCount();
-    return { data, meta: { total, page: query.page, limit: query.limit, pages: Math.ceil(total / query.limit) } };
+      if (query.search) {
+        qb.andWhere('(sale.customerName LIKE :search OR CAST(sale.id AS CHAR) LIKE :search OR product.name LIKE :search)', { search: `%${query.search}%` });
+      }
+      if (query.from) qb.andWhere('sale.createdAt >= :from', { from: query.from });
+      if (query.to) qb.andWhere('sale.createdAt <= :to', { to: `${query.to} 23:59:59` });
+      if (query.minAmount !== undefined) qb.andWhere('sale.totalAmount >= :minAmount', { minAmount: query.minAmount });
+      if (query.maxAmount !== undefined) qb.andWhere('sale.totalAmount <= :maxAmount', { maxAmount: query.maxAmount });
+      const [data, total] = await qb.getManyAndCount();
+      return pageResult(data, total, query.page, query.limit);
+    });
   }
 
   async findOne(id: number) {
-    const sale = await this.dataSource.getRepository(Sale).findOne({ where: { id } });
-    if (!sale) throw new NotFoundException('Sale not found');
-    return sale;
+    return this.cache.remember(this.cache.key('sales:item', id), async () => {
+      const sale = await this.dataSource.getRepository(Sale).findOne({ where: { id } });
+      if (!sale) throw new NotFoundException('Sale not found');
+      return sale;
+    });
   }
 }

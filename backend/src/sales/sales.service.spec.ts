@@ -6,6 +6,7 @@ import { InventoryGateway } from '../realtime/inventory.gateway';
 import { User } from '../users/user.entity';
 import { Sale } from './sale.entity';
 import { SalesService } from './sales.service';
+import { CacheStore } from '../cache/cache-store';
 
 describe('SalesService', () => {
   const user = { id: 1, role: Role.Employee } as User;
@@ -27,15 +28,21 @@ describe('SalesService', () => {
       transaction: jest.fn(async (callback) => callback(manager)),
       getRepository: jest.fn().mockReturnValue(salesRepository),
     } as unknown as DataSource;
-    return { service: new SalesService(dataSource, gateway), gateway, manager };
+    const cache = {
+      invalidate: jest.fn(),
+      key: jest.fn((scope, value) => `${scope}:${value}`),
+      remember: jest.fn((_key, load) => load()),
+    } as unknown as CacheStore;
+    return { service: new SalesService(dataSource, gateway, cache), gateway, manager, cache };
   }
 
   it('decrements stock and broadcasts only after a successful checkout', async () => {
-    const { service, gateway, manager } = setup(4);
+    const { service, gateway, manager, cache } = setup(4);
 
     await service.checkout({ items: [{ productId: 5, quantity: 2 }] }, user);
 
     expect(manager.save).toHaveBeenCalledWith([expect.objectContaining({ id: 5, stockQuantity: 2 })]);
+    expect(cache.invalidate).toHaveBeenCalledWith('products:', 'reports:', 'sales:');
     expect(gateway.broadcastStock).toHaveBeenCalledWith([{ productId: 5, stockQuantity: 2 }]);
   });
 

@@ -1,4 +1,19 @@
 services:
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    ports:
+      - "127.0.0.1:${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks: [retail]
+
   mysql:
     image: mysql:8.4
     profiles: [local-db]
@@ -30,6 +45,8 @@ services:
       DB_USER: ${MYSQL_USER:-retail}
       DB_PASSWORD: ${MYSQL_PASSWORD:-retail_password}
       DB_SYNCHRONIZE: ${DB_SYNCHRONIZE:-true}
+      REDIS_URL: redis://redis:6379
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-60}
       JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-8h}
       ADMIN_NAME: ${ADMIN_NAME:-System Admin}
@@ -37,6 +54,9 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-ChangeMe123!}
       CORS_ORIGIN: http://localhost:8080
     networks: [retail]
+    depends_on:
+      redis:
+        condition: service_healthy
 
   frontend:
     build:
@@ -50,6 +70,7 @@ services:
 
 volumes:
   mysql_data:
+  redis_data:
 
 networks:
   retail:
