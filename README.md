@@ -1,9 +1,11 @@
 # RetailOps
 
 A full-stack inventory and sales operations system for retail employees and managers.
+<iframe width="1035" height="582" src="https://www.youtube.com/embed/aTKkAnmj5c0" title="THIS IS NARD RETAIL :D" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## Live Demo
 
+- Explaining Video: [watch at youtube](https://www.youtube.com/watch?v=aTKkAnmj5c0)
 - Application: [https://www.mobags.store/](https://www.mobags.store/)
 - Swagger API documentation: [https://www.mobags.store/api/docs](https://www.mobags.store/api/docs)
 - Focused guides: [Frontend](frontend/README.md) | [Backend](backend/README.md)
