@@ -2,6 +2,12 @@
 
 A full-stack inventory and sales operations system for retail employees and managers.
 
+## Live Demo
+
+- Application: [https://www.mobags.store/](https://www.mobags.store/)
+- Swagger API documentation: [https://www.mobags.store/api/docs](https://www.mobags.store/api/docs)
+- Focused guides: [Frontend](frontend/README.md) | [Backend](backend/README.md)
+
 ## Features
 
 - Role-based JWT authentication for admins and employees
@@ -20,8 +26,8 @@ A full-stack inventory and sales operations system for retail employees and mana
 
 The repository is an npm-workspace monorepo:
 
-- `backend`: NestJS, TypeORM, MySQL, Redis, Passport JWT, Socket.IO
-- `frontend`: Angular standalone components, lazy routes, RxJS services, Vitest, Playwright
+- [`backend`](backend/README.md): NestJS, TypeORM, MySQL, Redis, Passport JWT, Socket.IO
+- [`frontend`](frontend/README.md): Angular standalone components, lazy routes, RxJS services, Vitest, Playwright
 - `docker-compose.yml`: MySQL, Redis, backend, and Nginx-served frontend
 
 Checkout is the critical consistency boundary. Product rows are loaded in deterministic order with a `pessimistic_write` lock, stock is validated, sale items are priced from the database, and stock is decremented in one database transaction. WebSocket events are emitted only after commit.
