@@ -21,4 +21,23 @@ describe('ReportsService', () => {
     expect(query).toHaveBeenCalledTimes(5);
     expect(result.summary).toEqual({ totalSales: '100.00' });
   });
+
+  it('caches the assembled inventory report', async () => {
+    const query = jest.fn()
+      .mockResolvedValueOnce([{ productCount: '10' }])
+      .mockResolvedValueOnce([{ id: 1, stockQuantity: 2 }]);
+    const dataSource = { query } as unknown as DataSource;
+    const cache = {
+      remember: jest.fn((_key, load) => load()),
+    } as unknown as CacheStore;
+
+    const result = await new ReportsService(dataSource, cache).inventory();
+
+    expect(cache.remember).toHaveBeenCalledWith('reports:inventory', expect.any(Function));
+    expect(query).toHaveBeenCalledTimes(2);
+    expect(result).toEqual({
+      summary: { productCount: '10' },
+      lowStock: [{ id: 1, stockQuantity: 2 }],
+    });
+  });
 });

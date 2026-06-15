@@ -143,6 +143,12 @@ The console prints `PASS` or a green check for successful files, failed assertio
 with file and line numbers, the number of passed/failed tests, and coverage percentages.
 Watch mode reruns affected tests after every saved change; press `q` to exit it.
 
+Coverage focuses on business logic that unit tests can exercise reliably. Backend
+coverage measures services, authorization, exception handling, and realtime event
+behavior. Frontend unit coverage measures API/state services and reusable request and
+calculation utilities; responsive components, routing, hotkeys, localization, and
+Socket.IO browser behavior are verified through Playwright and integration testing.
+
 Install Playwright's browser once, then run browser tests:
 
 ```bash
