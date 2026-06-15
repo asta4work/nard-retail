@@ -30,7 +30,7 @@ Checkout is the critical consistency boundary. Product rows are loaded in determ
 
 ```bash
 cp .env.example .env
-docker compose up --build
+npm run docker:up
 ```
 
 Open `http://localhost:8080`. The development admin is:
@@ -41,6 +41,21 @@ ChangeMe123!
 ```
 
 Change `JWT_SECRET`, database passwords, and the bootstrap admin password before deploying.
+
+Useful Docker commands:
+
+```bash
+npm run docker:up        # Build and start frontend, backend, and dependencies
+npm run docker:backend   # Build and start backend and its dependencies
+npm run docker:frontend  # Build frontend plus backend/Redis dependencies
+npm run docker:build     # Build frontend and backend images without starting them
+npm run docker:rebuild   # Rebuild and recreate frontend and backend
+npm run docker:restart   # Restart existing frontend and backend containers
+npm run docker:logs      # Follow frontend and backend logs
+npm run docker:ps        # Show Compose service status
+npm run docker:stop      # Stop frontend and backend, leaving Redis/MySQL available
+npm run docker:down      # Stop and remove the Compose stack
+```
 
 To connect the backend container to MySQL running elsewhere, set `DB_HOST` in `.env` to
 the database hostname or IP address. Set `DB_PORT` as well if MySQL is not listening on
@@ -57,13 +72,18 @@ and Docker Desktop for Redis.
 ```bash
 npm install
 npm run redis:start
-npm run start:backend
-npm run start:frontend
+npm start
 ```
 
-Run `start:backend` and `start:frontend` in separate terminals. Only Redis runs in
-Docker; Nest and Angular run directly on Windows in watch mode. Stop Redis later with
-`npm run redis:stop`.
+`npm start` runs Nest and Angular together in one terminal and stops both when either
+process exits. Use `npm run start:backend` and `npm run start:frontend` when separate
+terminals are preferable. Only Redis runs in Docker; Nest and Angular run directly in
+watch mode. Stop Redis later with `npm run redis:stop`.
+
+The same `npm start` command works inside a Node.js demo container. Install all workspace
+dependencies, expose `BACKEND_PORT` and `FRONTEND_PORT`, mount or provide the root `.env`,
+and ensure MySQL plus Redis are reachable from that container. Both servers bind to
+`0.0.0.0` by default.
 
 By default, the backend runs at `http://localhost:3000/api`; Angular runs at
 `http://localhost:4200`. The Angular development server reads the root `.env` and
